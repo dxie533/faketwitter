@@ -49,7 +49,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
-					returnJSON.status = "ERROR";
+					returnJSON.status = "error";
 					returnJSON.error = "Email is already taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
@@ -59,7 +59,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			dbo.collection("users").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
-					returnJSON.status = "ERROR";
+					returnJSON.status = "error";
 					returnJSON.error = "Username is already taken.";
 					res.status(500).send(returnJSON);
 					db.close();
@@ -69,7 +69,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			dbo.collection("users").find( {username: user }).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
-					returnJSON.status = "ERROR";
+					returnJSON.status = "error";
 					returnJSON.error = "Email is already in use.";
 					res.status(500).send(returnJSON);
 					db.close();
@@ -183,7 +183,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	var username = req.body.username;
 	var password = req.body.password;
 	var token = (req.cookies && req.cookies.token);
-	if(token){
+	/*if(token){
 		jwt.verify(token,secretToken,function(err,decoded){
 			if(decoded){
 				if(decoded.username == username){
@@ -193,7 +193,7 @@ router.post("/login", urlencodedParser, function(req,res){
 				}
 			}
 		});
-	}
+	}*/
 	if(!username || !password){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing password or username field.";
