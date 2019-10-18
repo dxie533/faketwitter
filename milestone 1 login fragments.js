@@ -1,3 +1,23 @@
+const express = require('express');
+const app = express();
+const path = require('path');
+const router = express.Router();
+var crypto = require('crypto');	
+var bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser');
+var nodemailer = require("nodemailer");
+var jsonParser = bodyParser.json();
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(urlencodedParser);
+app.use(bodyParser.json());
+app.use(cookieParser());
+var d = new Date();
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";//again this should be its own service
+var jwt = require('jsonwebtoken');
+var secretToken = "helloworld";
+app.use(express.static(path.join(__dirname,'/assets')));
+
 router.post("/adduser",urlencodedParser,function(req,res){
 	var user = req.body.username;
 	var password = req.body.password;
@@ -5,7 +25,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	var returnJSON = {};
 	if(!user || !password || !email){
 		returnJSON.status = "error";
-		returnJSON.error = "Username is already taken and is pending verification.";
+		returnJSON.error = "Username, password, or email field is missing.";
 		res.status(500).send(returnJSON);
 		return;
 	}
@@ -200,8 +220,6 @@ router.post("/login", urlencodedParser, function(req,res){
 					db.close();
 					return;
 				}
-				var newToken = jwt.sign({username:username},secretToken,{expiresIn: 86400});
-				res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 				responseJSON.status = "OK";
 				res.status(200).send(responseJSON);
 				db.close();
@@ -210,7 +228,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	});
 });
 
-router.post("/logout", function(req,res){
+/*router.post("/logout", function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var responseJSON = {};
 	if(!token){
@@ -228,4 +246,8 @@ router.post("/logout", function(req,res){
 			res.status(200).send(responseJSON);
 		});
 	}
-});
+});*/
+
+app.use('/', router); 
+app.listen(process.env.port || 3000); 
+console.log('Running account microservice at Port 3000');

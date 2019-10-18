@@ -2,18 +2,36 @@
 //this should be its own separate microservice
 //login microservice
 //general ui microservice
+const express = require('express');
+const app = express();
+const path = require('path');
+const router = express.Router();
+var crypto = require('crypto');	
+var bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser');
+var nodemailer = require("nodemailer");
+var jsonParser = bodyParser.json();
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(urlencodedParser);
+app.use(bodyParser.json());
+app.use(cookieParser());
+var d = new Date();
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+var jwt = require('jsonwebtoken');
+var secretToken = "helloworld";
+app.use(express.static(path.join(__dirname,'/assets')));
 
-
-router.post("/additem",urlencodedParser,function(req,res)){
+router.post("/additem",urlencodedParser,function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var itemContent = req.body.content;
 	var childType = req.body.childType;
 	var responseJSON = {};
-	var username;
-	if(!token || !itemContent){
+	var username = req.body.username;
+	if(!itemContent || !username){
 		responseJSON.status = "error";
-		if(!token)
-			responseJSON.error = "User not logged in.";
+		if(!username)
+			responseJSON.error = "Username is missing.";
 		if(!itemContent)
 			responseJSON.error = "Content of item is missing.";
 		res.status(500).send(responseJSON);
@@ -30,15 +48,6 @@ router.post("/additem",urlencodedParser,function(req,res)){
 			return;
 		}
 	}
-	if(token){
-		jwt.verify(token,secretToken, function(err,decoded){
-			if(!decoded){
-				responseJSON.status = "error";
-				responseJSON.error = "Session has expired. Please log in again.";
-				res.status(500).send(responseJSON);
-				return;
-			}
-			username = decoded.username;
 			MongoClient.connect(url,function(err,db){
 			if(err){
 				responseJSON.status = "error";
@@ -74,9 +83,8 @@ router.post("/additem",urlencodedParser,function(req,res)){
 				return;
 			});
 		});
-		}
-	}
-}
+
+});
 
 router.post("/search",urlencodedParser,function(req,res){
 	var timestamp = req.body.timestamp;
@@ -93,7 +101,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		}
 	}
 	else
-		childType = 25;
+		limit = 25;
 	
 	MongoClient.connect(url,function(err,db){
 		if(err){
@@ -121,3 +129,8 @@ router.post("/search",urlencodedParser,function(req,res){
 		});
 	});
 });
+
+
+app.use('/', router); 
+app.listen(process.env.port || 3000); 
+console.log('Running at item microservice on Port 3000');
