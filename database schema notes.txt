@@ -1,0 +1,31 @@
+table schema
+
+- user database
+	- disabled users collection
+		- username
+		- password
+		- email
+		- key
+	- users collection
+		- username
+		- email
+		- password
+		- followers
+		- following
+
+- item database
+	- item collection
+		- username
+		- id
+		- childType (if applicable)
+		- property object
+			- likes
+		- retweeted
+		- content
+		- timestamp
+		
+	- likes collection
+		- username 
+		- id (of item the user liked)
+		
+// we will most likely require a media collection sooner or later but thats milestone 2

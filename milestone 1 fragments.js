@@ -1,4 +1,7 @@
 //var url = "mongodb://localhost:27017/";//This should be a separate microservice which may be later sharded
+//this should be its own separate microservice
+//login microservice
+//general ui microservice
 
 
 router.post("/additem",urlencodedParser,function(req,res)){
