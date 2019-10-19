@@ -97,8 +97,8 @@ router.post("/adduser",urlencodedParser,function(req,res){
 		if(body.status === "error"){
 			res.status(500).send(body);
 		}else{
-			responseJSON.status = "OK";
-			res.status(200).send(responseJSON);
+			returnJSON.status = "OK";
+			res.status(200).send(returnJSON);
 		}
 	});
 });
