@@ -44,7 +44,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: "http://192.168.122.15/login",
+		url: "http://192.168.122.15:3000/login",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -91,7 +91,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: "http://192.168.122.15/adduser",
+		url: "http://192.168.122.15:3000/adduser",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -116,7 +116,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url:"http://192.168.122.15/verify",
+		url:"http://192.168.122.15:3000/verify",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -165,7 +165,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 			req.body.username = decoded.username;
 			request.post({
 					headers: {'content-type': 'application/json'},
-					url: "http://192.168.122.16/additem",
+					url: "http://192.168.122.16:3000/additem",
 					body: JSON.stringify(req.body)
 				}, function (err, response, body){
 					if(body.status === "error"){
@@ -197,7 +197,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		req.body.limit = 25;
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.16/search",
+		url:  "http://192.168.122.16:3000/search",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
