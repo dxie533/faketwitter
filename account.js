@@ -23,6 +23,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	var password = req.body.password;
 	var email = req.body.email;
 	var returnJSON = {};
+	var error = false;
 	if(!user || !password || !email){
 		returnJSON.status = "error";
 		returnJSON.error = "Username, password, or email field is missing.";
@@ -43,9 +44,13 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Username is already taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
+					error = true;
 					return;
 				}
   			});
+			if(error){
+				return;
+			}
 			dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
@@ -53,9 +58,13 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Email is already taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
+					error = true;
 					return;
 				}
 			});
+			if(error){
+				return;
+			}
 			dbo.collection("users").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
@@ -63,9 +72,13 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Username is already taken.";
 					res.status(500).send(returnJSON);
 					db.close();
+					error = true;
 					return;
 				}
 			});
+			if(error){
+				return;
+			}
 			dbo.collection("users").find( {username: user }).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
@@ -73,9 +86,13 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Email is already in use.";
 					res.status(500).send(returnJSON);
 					db.close();
+					error = true;
 					return;
 				}
 			});
+			if(error){
+				return;
+			}
 			var key = crypto.randomBytes(20).toString('hex');
 			dbo.collection("disabledUsers").insertOne({username:user, password:password, email:email,
 				key: key}, function(err,result){

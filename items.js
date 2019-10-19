@@ -71,7 +71,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				if(err){
 					responseJSON.status = "error";
 					responseJSON.error = "Error inserting a new item.";
-					res.send(responseJSON);
+					res.status(500).send(responseJSON);
 					db.close();
 					return;
 				}
