@@ -40,7 +40,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			//
 			errorJSON.error = false;
 			errorJSON.waiting = false;
-  			await dbo.collection("disabledUsers").find({ username: user}).toArray(function(err, result) {
+  			var result = await dbo.collection("disabledUsers").find({ username: user}).toArray();/*function(err, result) {
     				if (err) throw err;
     				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -51,11 +51,16 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					globalerror = true;
 					return;
 				}
-  			});
-			if(errorJSON.error){
-				return;
+  			});*/
+			if(!result || result.length > 0){
+					returnJSON.status = "error";
+					returnJSON.error = "Username is already taken and is pending verification.";
+					errorJSON.error = true;
+					res.status(500).send(returnJSON);
+					db.close();
+					return;
 			}
-			await dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
+			result = await dbo.collection("disabledUsers").find( {email: email}).toArray();/*function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -68,8 +73,16 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			});
 			if(errorJSON.error){
 				return;
+			}*/
+			if(!result || result.length > 0){
+					returnJSON.status = "error";
+					returnJSON.error = "Email is already taken and is pending verification.";
+					res.status(500).send(returnJSON);
+					db.close();
+					errorJSON.error = true;
+					return;
 			}
-			await dbo.collection("users").find( {email: email}).toArray(function(err,result){
+			result = await dbo.collection("users").find( {email: email}).toArray();/*function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -82,8 +95,16 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			});
 			if(errorJSON.error){
 				return;
+			}*/
+			if(!result || result.length > 0){
+					returnJSON.status = "error";
+					returnJSON.error = "Username is already taken.";
+					res.status(500).send(returnJSON);
+					db.close();
+					errorJSON.error = true;
+					return;
 			}
-			await dbo.collection("users").find( {username: user }).toArray(function(err,result){
+			result = await dbo.collection("users").find( {username: user }).toArray();/*function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -96,6 +117,14 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			});
 			if(errorJSON.error){
 				return;
+			}*/
+			if(!result || result.length > 0){
+					returnJSON.status = "error";
+					returnJSON.error = "Email is already in use.";
+					res.status(500).send(returnJSON);
+					db.close();
+					errorJSON.error = true;
+					return;
 			}
 			var key = crypto.randomBytes(20).toString('hex');
 			dbo.collection("disabledUsers").insertOne({username:user, password:password, email:email,
