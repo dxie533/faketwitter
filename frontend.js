@@ -44,7 +44,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: //address of login microservice
+		url: "http://192.168.122.15/login";
 		body: JSON.stringify(req.body);
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -91,7 +91,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: //address of login microservice services
+		url: "http://192.168.122.15/adduser";
 		body: JSON.stringify(req.body);
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -116,7 +116,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: //address of login microservice services
+		url:"http://192.168.122.15/verify";
 		body: JSON.stringify(req.body);
 	}, function (err, response, body){
 		if(body.status === "error"){
@@ -144,7 +144,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 		return;
 	}
 	if(childType){
-		if(childType !== "retweet" || childType !== "reply" || childType != null){
+		if(childType !== "retweet" && childType !== "reply" && childType != null){
 			responseJSON.status = "error";
 			if(!token)
 				responseJSON.error = "error";
@@ -165,7 +165,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 			req.body.username = decoded.username;
 			request.post({
 					headers: {'content-type': 'application/json'},
-					url: //address of item microservice services
+					url: "http://192.168.122.16/additem";
 					body: JSON.stringify(req.body);
 				}, function (err, response, body){
 					if(body.status === "error"){
@@ -197,7 +197,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		req.body.limit = 25;
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: //address of item microservice services
+		url:  "http://192.168.122.16/search"
 		body: JSON.stringify(req.body);
 	}, function (err, response, body){
 		if(body.status === "error"){
