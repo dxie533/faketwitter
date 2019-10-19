@@ -17,13 +17,13 @@ var url = "mongodb://localhost:27017/";//again this should be its own service
 var jwt = require('jsonwebtoken');
 var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
+var globalerror = false;
 
 router.post("/adduser",urlencodedParser,function(req,res){
 	var user = req.body.username;
 	var password = req.body.password;
 	var email = req.body.email;
 	var returnJSON = {};
-	var error = false;
 	if(!user || !password || !email){
 		returnJSON.status = "error";
 		returnJSON.error = "Username, password, or email field is missing.";
@@ -36,7 +36,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			//
 			// separate as in a completely newmongodb client,
 			//
-			//
+			globalerror = false;
   			dbo.collection("disabledUsers").find({ username: user}).toArray(function(err, result) {
     				if (err) throw err;
     				if(!err && result.length > 0){
@@ -44,11 +44,11 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Username is already taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
-					error = true;
+					globalerror = true;
 					return;
 				}
   			});
-			if(error){
+			if(globalerror){
 				return;
 			}
 			dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
@@ -58,11 +58,11 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Email is already taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
-					error = true;
+					globalerror = true;
 					return;
 				}
 			});
-			if(error){
+			if(globalerror){
 				return;
 			}
 			dbo.collection("users").find( {email: email}).toArray(function(err,result){
@@ -72,11 +72,11 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Username is already taken.";
 					res.status(500).send(returnJSON);
 					db.close();
-					error = true;
+					globalerror = true;
 					return;
 				}
 			});
-			if(error){
+			if(globalerror){
 				return;
 			}
 			dbo.collection("users").find( {username: user }).toArray(function(err,result){
@@ -86,11 +86,11 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					returnJSON.error = "Email is already in use.";
 					res.status(500).send(returnJSON);
 					db.close();
-					error = true;
+					globalerror = true;
 					return;
 				}
 			});
-			if(error){
+			if(globalerror){
 				return;
 			}
 			var key = crypto.randomBytes(20).toString('hex');

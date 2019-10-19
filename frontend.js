@@ -19,7 +19,6 @@ var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
 var request = require('request');
 
-
 router.post("/login", urlencodedParser, function(req,res){
 	var responseJSON = {};
 	var username = req.body.username;
@@ -47,6 +46,7 @@ router.post("/login", urlencodedParser, function(req,res){
 		url: "http://192.168.122.15:3000/login",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
+		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 		}else{
@@ -94,6 +94,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 		url: "http://192.168.122.15:3000/adduser",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
+		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 		}else{
@@ -119,6 +120,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 		url:"http://192.168.122.15:3000/verify",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
+		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 		}else{
@@ -168,6 +170,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 					url: "http://192.168.122.16:3000/additem",
 					body: JSON.stringify(req.body)
 				}, function (err, response, body){
+					body = JSON.parse(body);
 					if(body.status === "error"){
 						res.status(500).send(body);
 					}else{
@@ -200,6 +203,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		url:  "http://192.168.122.16:3000/search",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
+		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 		}else{
