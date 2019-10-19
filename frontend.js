@@ -49,6 +49,7 @@ router.post("/login", urlencodedParser, function(req,res){
 		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
+			return;
 		}else{
 			var newToken = jwt.sign({username:username},secretToken,{expiresIn: 86400});
 			res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
@@ -97,6 +98,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
+			return;
 		}else{
 			returnJSON.status = "OK";
 			res.status(200).send(returnJSON);
@@ -123,6 +125,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
+			return;
 		}else{
 			responseJSON.status = "OK";
 			res.status(200).send(responseJSON);
@@ -173,6 +176,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 					body = JSON.parse(body);
 					if(body.status === "error"){
 						res.status(500).send(body);
+						return;
 					}else{
 						responseJSON.status = "OK";
 						res.status(200).send(body);
@@ -206,6 +210,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
+			return;
 		}else{
 			responseJSON.status = "OK";
 			res.status(200).send(body);
@@ -213,6 +218,32 @@ router.post("/search",urlencodedParser,function(req,res){
 	});
 	
 });
+
+router.get("/item/:id", urlencodedParser,function(req,res){
+	var id = (req.params && req.params.id);
+	var responseJSON = {};
+	if(!id){
+		responseJSON.status = "error";
+		responseJSON.error = "Missing item ID to get.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	request.get({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.16:3000/item/"+id,
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
+
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running frontend server at Port 3000');
