@@ -19,6 +19,7 @@ var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
 var globalerror = false;
 
+
 router.post("/adduser",urlencodedParser,function(req,res){
 	var user = req.body.username;
 	var password = req.body.password;
@@ -31,14 +32,15 @@ router.post("/adduser",urlencodedParser,function(req,res){
 		res.status(500).send(returnJSON);
 		return;
 	}
-	MongoClient.connect(url, function(err, db) {
+	MongoClient.connect(url, async function(err, db) {
   			if (err) throw err;
   			var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
 			//
 			// separate as in a completely newmongodb client,
 			//
 			errorJSON.error = false;
-  			dbo.collection("disabledUsers").find({ username: user}).toArray(function(err, result) {
+			errorJSON.waiting = false;
+  			await dbo.collection("disabledUsers").find({ username: user}).toArray(function(err, result) {
     				if (err) throw err;
     				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -53,7 +55,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			if(errorJSON.error){
 				return;
 			}
-			dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
+			await dbo.collection("disabledUsers").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -67,7 +69,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			if(errorJSON.error){
 				return;
 			}
-			dbo.collection("users").find( {email: email}).toArray(function(err,result){
+			await dbo.collection("users").find( {email: email}).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
@@ -81,7 +83,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			if(errorJSON.error){
 				return;
 			}
-			dbo.collection("users").find( {username: user }).toArray(function(err,result){
+			await dbo.collection("users").find( {username: user }).toArray(function(err,result){
 				if(err) throw err;
 				if(!err && result.length > 0){
 					returnJSON.status = "error";
