@@ -69,7 +69,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				newEntry.timestamp = Date.now();
 			dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames
 				if(err){
-					responseJSON.status = "ERROR";
+					responseJSON.status = "error";
 					responseJSON.error = "Error inserting a new item.";
 					res.send(responseJSON);
 					db.close();
