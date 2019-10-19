@@ -44,8 +44,8 @@ router.post("/login", urlencodedParser, function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: "http://192.168.122.15/login";
-		body: JSON.stringify(req.body);
+		url: "http://192.168.122.15/login",
+		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
 			res.status(500).send(body);
@@ -91,8 +91,8 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url: "http://192.168.122.15/adduser";
-		body: JSON.stringify(req.body);
+		url: "http://192.168.122.15/adduser",
+		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
 			res.status(500).send(body);
@@ -116,8 +116,8 @@ router.post("/verify",urlencodedParser, function(req, res){
 	}
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url:"http://192.168.122.15/verify";
-		body: JSON.stringify(req.body);
+		url:"http://192.168.122.15/verify",
+		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
 			res.status(500).send(body);
@@ -165,8 +165,8 @@ router.post("/additem",urlencodedParser,function(req,res){
 			req.body.username = decoded.username;
 			request.post({
 					headers: {'content-type': 'application/json'},
-					url: "http://192.168.122.16/additem";
-					body: JSON.stringify(req.body);
+					url: "http://192.168.122.16/additem",
+					body: JSON.stringify(req.body)
 				}, function (err, response, body){
 					if(body.status === "error"){
 						res.status(500).send(body);
@@ -197,8 +197,8 @@ router.post("/search",urlencodedParser,function(req,res){
 		req.body.limit = 25;
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.16/search"
-		body: JSON.stringify(req.body);
+		url:  "http://192.168.122.16/search",
+		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 		if(body.status === "error"){
 			res.status(500).send(body);
