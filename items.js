@@ -40,10 +40,12 @@ router.post("/additem",urlencodedParser,function(req,res){
 	if(childType){
 		if(childType !== "retweet" && childType !== "reply" && childType != null){
 			responseJSON.status = "error";
-			if(!token)
-				responseJSON.error = "error";
-			else
-				responseJSON.error = "Invalid child type.";
+			if(!token){
+					responseJSON.error = "Please log in to add an item";
+					res.status(500).send(responseJSON);
+					return;
+			}
+			responseJSON.error = "Invalid child type.";
 			res.status(500).send(responseJSON);
 			return;
 		}
@@ -90,7 +92,7 @@ router.post("/search",urlencodedParser,function(req,res){
 	var timestamp = req.body.timestamp;
 	var limit = req.body.limit;
 	var responseJSON = {};
-	if(!timestamp){
+	if(!timestamp || timestamp < 0){
 		timestamp = Date.now();
 	}
 	if(limit){

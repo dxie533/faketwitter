@@ -243,13 +243,13 @@ router.post("/login", urlencodedParser, function(req,res){
 				}
 			}
 		});
-	}*/
+	}
 	if(!username || !password){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing password or username field.";
 		res.status(500).send(responseJSON);
 		return;
-	}
+	}*/
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
