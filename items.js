@@ -136,7 +136,7 @@ router.get("/item/:id",function(req,res){
 	var responseJSON = {};
 	var responseItem = {};
 	var requestedId = req.params.id;
-	res.send();
+	//res.send(); if you do this we cant send anything else after this or the server crashes
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
@@ -144,18 +144,20 @@ router.get("/item/:id",function(req,res){
 			dbo.collection("items").find({id:requestedId}).toArray(function(err,result){
 				if(err) throw err;
 				if(err){
-					responseJSON.status = "ERROR";
-					res.send(responseJSON);
+					responseJSON.status = "error";
+					responseJSON.error = "Error grabbing items from database.";
+					res.status(500).send(responseJSON);
 					db.close(); 
 					return;
 				}
 				if(result.length == 0){
-					responseJSON.status = "ERROR";
-					res.send(responseJSON);
+					responseJSON.status = "error";
+					responseJSON.error = "No such item exists.";
+					res.status(500).send(responseJSON);
 					db.close();
 					return;
 				}
-				responseProperty = {};
+				/*responseProperty = {}; no need for this since mongodb returns a json object aka its not mysql
 				responseItem.id = result[0].id;
 				responseItem.username = result[0].username;
 				responseProperty.likes = result[0].likes;
@@ -163,9 +165,9 @@ router.get("/item/:id",function(req,res){
 				responseItem.retweeted = result[0].retweeted;
 				responseItem.content = result[0].content;
 				responseItem.timestamp = result[0].timestamp;
-				responseJSON.item = responseItem;
+				responseJSON.item = responseItem;*/
 				responseJSON.status = "OK";
-				res.send(responseJSON);
+				res.status(200).send(result[0]);
 				db.close();
 			});
 		}
