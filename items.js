@@ -132,6 +132,46 @@ router.post("/search",urlencodedParser,function(req,res){
 	});
 });
 
+router.get("/item/:id",function(req,res){
+	var responseJSON = {};
+	var responseItem = {};
+	var requestedId = req.params.id;
+	res.send();
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("items").find({id:requestedId}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "ERROR";
+					res.send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "ERROR";
+					res.send(responseJSON);
+					db.close();
+					return;
+				}
+				responseProperty = {};
+				responseItem.id = result[0].id;
+				responseItem.username = result[0].username;
+				responseProperty.likes = result[0].likes;
+				responseItem.property = responseProperty;
+				responseItem.retweeted = result[0].retweeted;
+				responseItem.content = result[0].content;
+				responseItem.timestamp = result[0].timestamp;
+				responseJSON.item = responseItem;
+				responseJSON.status = "OK";
+				res.send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
 
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
