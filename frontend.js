@@ -244,6 +244,18 @@ router.get("/item/:id", urlencodedParser,function(req,res){
 });
 
 
+//FRONT END GOES DOWN HERE
+router.get("/",function(req,res){
+	res.send("<html><head><script src = '/verify.js'></script><link rel = \"stylesheet\" type=\"text/css\" href=\"/change.css\"></head> <body><h1>Lightweight Twitter<br/>Login<br/><form action = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/' method = 'post' onsubmit = 'return validateLogin()' id = 'loginForm' >Username:<input type='text' name='name' id = 'loginUsername'><br/>Password:<input type = 'text' name = 'password' id = 'loginPassword'><input type = 'submit'></form><div id = 'loginResult'></div>"
+	+ "<br/> Register <br/>Username:<input type = 'text' id ='registerUsername' ></input><br/>Password: <input type = 'text' id = 'registerPassword'></input><br/> Email: <input type = 'text' id = 'registerEmail'></input><button onclick = 'createDisabledAccount()'>Register</button><br/><div id = 'registrationResult'></div>"
+	+ "<br /> <br/> Validate <div>Email:<input type = 'text' id = 'validateEmail'></input><br/>Validation Code: <input type = 'text' id = 'validateCode'></input><button onclick = 'validate()'>Validate</button><div id = 'validationResult'></div></div>"
+	+ "</body></h1></html>");
+});
+
+router.post("/",function(req,res){
+	
+});
+
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running frontend server at Port 3000');
