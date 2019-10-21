@@ -8,7 +8,7 @@ function validate(){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
 			if(results.status === "error")
-				document.getElementById("validationResult").innerHTML = "Validation failed.";
+				document.getElementById("validationResult").innerHTML = results.error;
 			if(results.status === "OK")
 				document.getElementById("validationResult").innerHTML = "Successfully validated. You may now login";
 		}
@@ -30,7 +30,7 @@ function createDisabledAccount(){
 			if(results.status === "OK")
                                 document.getElementById("registrationResult").innerHTML = "Successfully registered. Registration code will be sent to your email.";
 			if(results.status === "error")
-				document.getElementById("registrationResult").innerHTML = "Error registering. Username already taken.";
+				document.getElementById("registrationResult").innerHTML = results.error;
 		 }
         }
         request.open("POST", "/adduser",true);
@@ -52,7 +52,7 @@ function validateLogin(){
 				document.getElementById("loginForm").submit();
 			}
 			if(results.status === "error"){
-				document.getElementById("loginResult").innerHTML = "Incorrect username or password or unverified account.";
+				document.getElementById("loginResult").innerHTML = results.error;
 				//event.preventDefault();
 			}
 		}
