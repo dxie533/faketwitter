@@ -265,6 +265,7 @@ router.post("/",function(req,res){
 
 router.get("/searchpage",function(req,res){
 	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a><h1>Search for posts</h1><br/>Get all posts on or before unix time:<input type = 'number' id = 'timestamp'</input><br/>Number of items to search for (Max 100):<input type = 'number' max:'100' min:'1' id = 'count' value='25'></input><button onclick = 'search()'>Execute Search</button><br/><h1>Search Result</h1><div id = 'searchResult'></div></body></html>";
+	res.send(returnString);
 });
 
 app.use('/', router); 
