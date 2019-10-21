@@ -115,7 +115,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		var dbo = db.db("faketwitter");
 		var sortOption = {};
 		sortOption.timestamp = -1;
-		dbo.collection("items").find({"timestamp":{$lte:timestamp}}).limit(limit).sort(sortOption).toArray(function(err,result){
+		dbo.collection("items").find({"timestamp":{$lte:timestamp}}).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,result){
 			if(err){
 					responseJSON.status = "error";
 					responseJSON.error = "Error retrieving items.";
@@ -141,7 +141,7 @@ router.get("/item/:id",function(req,res){
 		if(err) throw err;
 		if(!err){
 			var dbo = db.db("faketwitter");
-			dbo.collection("items").find({id:requestedId}).toArray(function(err,result){
+			dbo.collection("items").find({id:requestedId}).project({_id: 0 }).toArray(function(err,result){
 				if(err) throw err;
 				if(err){
 					responseJSON.status = "error";

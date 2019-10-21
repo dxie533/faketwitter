@@ -255,12 +255,16 @@ router.get("/item/:id", urlencodedParser,function(req,res){
 router.get("/",function(req,res){
 	res.send("<html><head><script src = '/verify.js'></script><link rel = \"stylesheet\" type=\"text/css\" href=\"/change.css\"></head> <body><h1>Lightweight Twitter<br/>Login<br/><form action = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/' method = 'post' onsubmit = 'return validateLogin()' id = 'loginForm' >Username:<input type='text' name='name' id = 'loginUsername'><br/>Password:<input type = 'text' name = 'password' id = 'loginPassword'><input type = 'submit'></form><div id = 'loginResult'></div>"
 	+ "<br/> Register <br/>Username:<input type = 'text' id ='registerUsername' ></input><br/>Password: <input type = 'text' id = 'registerPassword'></input><br/> Email: <input type = 'text' id = 'registerEmail'></input><button onclick = 'createDisabledAccount()'>Register</button><br/><div id = 'registrationResult'></div>"
-	+ "<br /> <br/> Validate <div>Email:<input type = 'text' id = 'validateEmail'></input><br/>Validation Code: <input type = 'text' id = 'validateCode'></input><button onclick = 'validate()'>Validate</button><div id = 'validationResult'></div></div>"
+	+ "<br /> <br/> Validate <div>Email:<input type = 'text' id = 'validateEmail'></input><br/>Validation Code: <input type = 'text' id = 'validateCode'></input><button onclick = 'validate()'>Validate</button><div id = 'validationResult'></div></div> <br/> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a>"
 	+ "</body></h1></html>");
 });
 
 router.post("/",function(req,res){
 	
+});
+
+router.get("/searchpage",function(req,res){
+	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a><h1>Search for posts</h1><br/>Get all posts on or before unix time:<input type = 'number' id = 'timestamp'</input><br/>Number of items to search for (Max 100):<input type = 'number' max:'100' min:'1' id = 'count' value='25'></input><button onclick = 'search()'>Execute Search</button><br/><h1>Search Result</h1><div id = 'searchResult'></div></body></html>";
 });
 
 app.use('/', router); 
