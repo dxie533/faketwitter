@@ -19,7 +19,7 @@ var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
 var request = require('request');
 
-router.post("/login", urlencodedParser, function(req,res){
+router.post("/login", urlencodedParser, async function(req,res){
 	var responseJSON = {};
 	var username = req.body.username;
 	var password = req.body.password;
