@@ -167,7 +167,8 @@ router.get("/item/:id",function(req,res){
 				responseItem.timestamp = result[0].timestamp;
 				responseJSON.item = responseItem;*/
 				responseJSON.status = "OK";
-				res.status(200).send(result[0]);
+				responseJSON.item = result[0];
+				res.status(200).send(responseJSON);
 				db.close();
 			});
 		}
