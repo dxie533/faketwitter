@@ -5,7 +5,7 @@ function validate(){
 
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
-		if(this.readyState == 4 && this.status == 200){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
 			if(results.status === "error")
 				document.getElementById("validationResult").innerHTML = "Validation failed.";
@@ -25,7 +25,7 @@ function createDisabledAccount(){
 	accountObject.email = document.getElementById("registerEmail").value;
 	 var request = new XMLHttpRequest();
 	 request.onreadystatechange = function(){
-                if(this.readyState == 4 && this.status == 200){
+                if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
                 	var results = JSON.parse(request.responseText);
 			if(results.status === "OK")
                                 document.getElementById("registrationResult").innerHTML = "Successfully registered. Registration code will be sent to your email.";
@@ -45,7 +45,7 @@ function validateLogin(){
 
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
-		if(this.readyState == 4 && this.status == 200){
+		if(this.readyState == 4 && this.status == 200 ||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
 			if(results.status === "OK"){
 				document.getElementById("loginResult").innerHTML = "Successfully logged in.";
