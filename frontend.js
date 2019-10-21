@@ -198,7 +198,7 @@ router.post("/search",urlencodedParser,function(req,res){
 	var limit = req.body.limit;
 	var responseJSON = {};
 	if(!timestamp){
-		req.body.timestamp = Date.now();
+		req.body.timestamp = Math.floor(Date.now()/1000)
 	}
 	if(limit){
 		if(limit > 100){

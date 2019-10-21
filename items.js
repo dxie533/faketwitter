@@ -68,7 +68,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				newEntry.property.likes = 0;
 				newEntry.retweeted = 0;
 				newEntry.content = itemContent;
-				newEntry.timestamp = Date.now();
+				newEntry.timestamp = Math.floor(Date.now()/1000);
 			dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames
 				if(err){
 					responseJSON.status = "error";
@@ -93,7 +93,7 @@ router.post("/search",urlencodedParser,function(req,res){
 	var limit = req.body.limit;
 	var responseJSON = {};
 	if(!timestamp || timestamp < 0){
-		timestamp = Date.now();
+		timestamp = Math.floor(Date.now()/1000);
 	}
 	if(limit){
 		if(limit > 100){
