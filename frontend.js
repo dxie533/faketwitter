@@ -214,7 +214,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		url:  "http://192.168.122.16:3000/search",
 		body: JSON.stringify(req.body)
 	}, function (err, response, body){
-		body = JSON.parse(body);
+			body = JSON.parse(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 			return;

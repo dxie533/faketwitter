@@ -3,10 +3,10 @@ function search(){
 	var time = document.getElementById("timestamp").value;
 	var count = document.getElementById("count").value;
 	if(time != ""){
-		searchObject.timestamp = document.getElementById("timestamp").value;
+		searchObject.timestamp = parseInt(document.getElementById("timestamp").value,10);
 	}
 	if(count != "")
-		searchObject.limit = document.getElementById("count").value;
+		searchObject.limit = parseInt(document.getElementById("count").value,10);
 	
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
