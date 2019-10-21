@@ -25,7 +25,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	var password = req.body.password;
 	var token = (req.cookies && req.cookies.token);
 	if(token){
-		jwt.verify(token,secretToken,function(err,decoded){
+		var decoded = await jwt.verify(token,secretToken);/*,function(err,decoded){
 			if(decoded){
 				if(decoded.username == username){
 					responseJSON.status = "OK";
@@ -33,7 +33,14 @@ router.post("/login", urlencodedParser, function(req,res){
 					return;
 				}
 			}
-		});
+		});*/
+		if(decoded){
+				if(decoded.username == username){
+					responseJSON.status = "OK";
+					res.status(200).send(responseJSON);
+					return;
+				}
+		}
 	}
 	if(!username || !password){
 		responseJSON.status = "error";
