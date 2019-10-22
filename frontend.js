@@ -260,7 +260,23 @@ router.get("/",function(req,res){
 });
 
 router.post("/",function(req,res){
-
+	var token = (req.cookies && req.cookies.token);
+	var username = req.body.name;
+	if(!token){
+		res.send("Please log in to access this content");
+		return;
+	}	
+	if(token){
+		jwt.verify(token,secretToken,function(err,decoded){
+			if(decoded){
+				username = decoded.username;
+				return;
+			}
+			res.send("Please log in to access this content");
+			res.end();
+			return;
+		});
+	}
 	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><div id = 'addResult'></div></body></html>";
 	res.send(returnString);
 });
