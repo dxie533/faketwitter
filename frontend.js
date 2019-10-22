@@ -78,7 +78,7 @@ router.post("/logout", function(req,res){
 		jwt.verify(token, secretToken, function(err,decoded){
 			if(decoded){
 				var newToken = jwt.sign({username:undefined},secretToken,{expiresIn:1});
-				res.cookie('token',newToken,{maxAge:100000, overwrite: true});
+				res.cookie('token',newToken,{maxAge:1, overwrite: true});
 			}
 			responseJSON.status = "OK";
 			res.status(200).send(responseJSON);
@@ -261,7 +261,7 @@ router.get("/",function(req,res){
 
 router.post("/",function(req,res){
 
-	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><div id = 'addResult'></div></body></html>";
+	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><div id = 'addResult'></div></body></html>";
 	res.send(returnString);
 });
 
