@@ -40,5 +40,5 @@ var request = new XMLHttpRequest();
 	}
 	request.open("POST","/logout",true);
 	request.setRequestHeader("Content-Type","application/json");
-	return false;
+	request.send();
 }
