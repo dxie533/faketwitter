@@ -30,3 +30,15 @@ function addItem(parentID,type){
 	request.setRequestHeader("Content-Type","application/json");
 	request.send(JSON.stringify(itemObject));
 }
+
+function logout(){
+var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200 ||this.readyState == 4 && this.status == 500){
+			window.location = "http://helloworld123.cse356.compas.cs.stonybrook.edu/";
+		}
+	}
+	request.open("POST","/logout",true);
+	request.setRequestHeader("Content-Type","application/json");
+	return false;
+}
