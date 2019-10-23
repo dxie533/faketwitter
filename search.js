@@ -33,3 +33,30 @@ function search(){
 	request.setRequestHeader("Content-Type","application/json");
 	request.send(JSON.stringify(searchObject));
 }
+
+function getItem(){
+	var itemObject = {};
+	var item = document.getElementById("itemField");
+	var returnString = "";
+	if(!item || item == ""){
+		document.getElementById("itemResult").innerHTML = "No item ID was entered";
+	}
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+				document.getElementById("itemResult").innerHTML = results.error;
+				return;
+			}
+			if(results.status === "OK"){
+				var response = "";
+				response += "<div>User:" + results.item.username + "<br/>" + results.item.content + "<br/> Likes:" + results.item.property.likes + " Retweets:" + results.item.retweeted + "<br/> Posted on (UNIX Time): " + results.item.timestamp + "<br /><br/>";
+				document.getElementById("itemResult").innerHTML = response;
+			}
+		}
+	}
+	request.open("GET", "/item/"+item,true);
+	request.setRequestHeader("Content-Type","application/json");
+	request.send(JSON.stringify(searchObject));
+}
