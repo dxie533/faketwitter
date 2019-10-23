@@ -40,6 +40,7 @@ function getItem(){
 	var returnString = "";
 	if(!item || item == ""){
 		document.getElementById("itemResult").innerHTML = "No item ID was entered";
+		return;
 	}
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
@@ -57,6 +58,5 @@ function getItem(){
 		}
 	}
 	request.open("GET", "/item/"+item,true);
-	request.setRequestHeader("Content-Type","application/json");
-	request.send(JSON.stringify(searchObject));
+	request.send();
 }
