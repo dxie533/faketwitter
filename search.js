@@ -36,7 +36,7 @@ function search(){
 
 function getItem(){
 	var itemObject = {};
-	var item = document.getElementById("itemField");
+	var item = document.getElementById("itemField").value;
 	var returnString = "";
 	if(!item || item == ""){
 		document.getElementById("itemResult").innerHTML = "No item ID was entered";
