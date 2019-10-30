@@ -113,6 +113,8 @@ router.post("/search",urlencodedParser,function(req,res){
 		for(var i = 0; i < splitQuery.length-1;i++){
 			queryString = queryString + "(\b" + splitQuery[i] + "\b)|"; 
 		}
+		console.log(splitQuery.length);
+		console.log(splitQuery);
 		queryString = queryString + "(\b" + splitQuery.length-1 + "\b)";
 		searchJSON.content = {$regex:queryString};
 	}
