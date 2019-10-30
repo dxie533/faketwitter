@@ -91,6 +91,9 @@ router.post("/additem",urlencodedParser,function(req,res){
 router.post("/search",urlencodedParser,function(req,res){
 	var timestamp = req.body.timestamp;
 	var limit = req.body.limit;
+	var searchQuery = req.body.q;
+	var usernameQuery = req.body.username;
+	var searchJSON = {};
 	var responseJSON = {};
 	if(!timestamp || timestamp < 0){
 		timestamp = Math.floor(Date.now()/1000);
@@ -104,6 +107,19 @@ router.post("/search",urlencodedParser,function(req,res){
 	}
 	else
 		limit = 25;
+	if(searchQuery){
+		var splitQuery = searchQuery.split(" ");
+		var queryString = "";
+		for(var i = 0; i < splitQuery.length-1;i++){
+			queryString += "(\b" + splitQuery[i] + "\b)|"; 
+		}
+		queryString += "(\b" + splitQuery.length-1 + "\b)";
+		searchJSON.content = {$regex:queryString};
+	}
+	if(usernameQuery){
+		searchJSON.username = usernameQuery;
+	}
+	searchJSON.timestamp = {$lte:timestamp};
 	
 	MongoClient.connect(url,function(err,db){
 		if(err){
