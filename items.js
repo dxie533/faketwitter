@@ -109,11 +109,11 @@ router.post("/search",urlencodedParser,function(req,res){
 		limit = 25;
 	if(searchQuery){
 		var splitQuery = searchQuery.split(" ");
-		var queryString = "";
+		var queryString = "("+searchQuery+")|";
 		for(var i = 0; i < splitQuery.length-1;i++){
-			queryString = queryString + "(\\b*" + splitQuery[i] + "\\b*)|"; 
+			queryString = queryString + "(\\b" + splitQuery[i] + "\\b)|"; 
 		}
-		queryString = queryString + "(\\b*" + splitQuery[splitQuery.length-1] + "\\b*)";
+		queryString = queryString + "(\\b" + splitQuery[splitQuery.length-1] + "\\b)";
 		searchJSON.content = {$regex:queryString};
 	}
 	if(usernameQuery){
