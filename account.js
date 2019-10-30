@@ -298,6 +298,42 @@ router.post("/login", urlencodedParser, function(req,res){
 	}
 });*/
 
+router.post("/getfollowing",function(req,res){
+	var responseJSON = {};
+	if(!req.body.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:username}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0 || result[0].password !== password){
+					responseJSON.status = "error";
+					responseJSON.error = "Invalid username or password";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				responseJSON.followers = result.followers;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running account microservice at Port 3000');

@@ -120,7 +120,6 @@ router.post("/search",urlencodedParser,function(req,res){
 		searchJSON.username = usernameQuery;
 	}
 	searchJSON.timestamp = {$lte:timestamp};
-	console.log(searchJSON);
 	MongoClient.connect(url,function(err,db){
 		if(err){
 				responseJSON.status = "error";
