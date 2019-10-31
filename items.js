@@ -107,6 +107,8 @@ router.post("/search",urlencodedParser, async function(req,res){
 			if(decoded){
 				if(searchJSON.username == undefined)
 					searchJSON.username = {};
+				console.log(decoded);
+				console.log(decoded.following);
 				searchJSON.username.$in = decoded.following;
 			}
 		}catch(err){
