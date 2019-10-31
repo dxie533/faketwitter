@@ -28,6 +28,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 	var childType = req.body.childType;
 	var responseJSON = {};
 	var username = req.body.username;
+	console.log(token);
 	if(!itemContent || !username){
 		responseJSON.status = "error";
 		if(!username)
