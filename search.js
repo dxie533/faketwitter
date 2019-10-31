@@ -2,12 +2,23 @@ function search(){
 	var searchObject = {};
 	var time = document.getElementById("timestamp").value;
 	var count = document.getElementById("count").value;
+	var searchQuery = document.getElementById("searchQuery").value;
+	var followersOnly = document.getElementById("followersOnly");
+	var usernameQuery = document.getElementById("usernameOnly").value;
+	if(followersOnly != undefined){
+		searchObject.following = followersOnly.checked;
+	}
 	if(time != ""){
 		searchObject.timestamp = parseInt(document.getElementById("timestamp").value,10);
 	}
 	if(count != "")
 		searchObject.limit = parseInt(document.getElementById("count").value,10);
-	
+	if(searchQuery != ""){
+		searchObject.q = searchQuery;
+	}
+	if(usernameQuery != ""){
+		searchObject.username = usernameQuery;
+	}
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){

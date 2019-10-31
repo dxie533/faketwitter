@@ -437,8 +437,20 @@ router.post("/",function(req,res){
 });
 
 router.get("/searchpage",function(req,res){
+	var token = (req.cookies && req.cookies.token);
+	var loggedInString = "";
+	if(token){
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(decoded){
+				loggedInString = "Filter to followed users only:<input type = 'checkbox' id='followersOnly' checked></input><br/>";
+			} 
+		}catch(err){
+			
+		}
+	}
 	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a>	<h1>Search for an individual post</h1>Item ID:<input type = 'text' id = 'itemField'></input><button onclick = 'getItem()'>Search for Item</button><div id = 'itemResult'></div><br/>"+
-	"<h1>Search for posts</h1><br/>Get all posts on or before unix time:<input type = 'number' id = 'timestamp'</input><br/>Number of items to search for (Max 100):<input type = 'number' max:'100' min:'1' id = 'count' value='25'></input><button onclick = 'search()'>Execute Search</button><br/><h1>Search Result</h1><div id = 'searchResult'></div><br/></body></html>";
+	"<h1>Search for posts</h1><br/>Search for post with content:<input type = 'text' id = 'searchQuery'></input><br/>Filter search by username:<input type = 'text' id = 'usernameOnly'></input></br>"+loggedInString+"Get all posts on or before unix time:<input type = 'number' id = 'timestamp'</input><br/>Number of items to search for (Max 100):<input type = 'number' max:'100' min:'1' id = 'count' value='25'></input><button onclick = 'search()'>Execute Search</button><br/><h1>Search Result</h1><div id = 'searchResult'></div><br/></body></html>";
 	res.send(returnString);
 });
 
