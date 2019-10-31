@@ -84,8 +84,6 @@ router.post("/search",urlencodedParser, async function(req,res){
 	var searchJSON = {};
 	var responseJSON = {};
 	var token = (req.cookies && req.cookies.token);
-	console.log(token);
-	console.log(followingFilter);
 	if(followingFilter == undefined){
 		followingFilter = true;
 	}
@@ -95,8 +93,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 			if(decoded){
 				if(searchJSON.username == undefined)
 					searchJSON.username = {};
-				console.log(decoded);
-				console.log(decoded.following);
+
 				searchJSON.username.$in = decoded.following;
 			}
 		}catch(err){
@@ -131,7 +128,6 @@ router.post("/search",urlencodedParser, async function(req,res){
 		searchJSON.username.$eq = usernameQuery;
 	}
 	searchJSON.timestamp = {$lte:timestamp};
-	console.log(searchJSON);
 	MongoClient.connect(url,function(err,db){
 		if(err){
 				responseJSON.status = "error";
@@ -195,6 +191,45 @@ router.get("/item/:id",function(req,res){
 				responseJSON.item = responseItem;*/
 				responseJSON.status = "OK";
 				responseJSON.item = result[0];
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
+router.delete("/item/:id",function(req,res){
+	var responseJSON = {};
+	var requestedId = req.params.id;
+	var username = req.body.username;
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to delete a post if you can even delete this post.";
+		res.status(500).send(responseJSON);
+		db.close(); 
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("items").deleteOne({username:username, id:requestedId}),function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error deleting item from database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.result.n == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "No such item exists under your username.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				responseJSON.status = "OK";
 				res.status(200).send(responseJSON);
 				db.close();
 			});

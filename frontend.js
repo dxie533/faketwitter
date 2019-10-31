@@ -202,7 +202,6 @@ router.post("/search",urlencodedParser,function(req,res){
 	var timestamp = req.body.timestamp;
 	var limit = req.body.limit;
 	var responseJSON = {};
-	console.log(req.cookies.token);
 	if(!timestamp){
 		req.body.timestamp = Math.floor(Date.now()/1000)
 	}
@@ -246,6 +245,56 @@ router.get("/item/:id", urlencodedParser,function(req,res){
 	request.get({
 		headers: {'content-type': 'application/json'},
 		url:  "http://192.168.122.16:3000/item/"+id,
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
+router.delete("/item/:id", urlencodedParser,async function(req,res){
+	var id = (req.params && req.params.id);
+	var token = (req.cookies && req.cookies.token);
+	var responseJSON = {};
+	var usernameJSON = {};
+	if(!id){
+		responseJSON.status = "error";
+		responseJSON.error = "Missing item ID to delete.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	if(!token){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to delete items.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	if(token){
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(!decoded){
+				responseJSON.status = "error";
+				responseJSON.error = "You must be logged in to delete items.";
+				res.status(500).send(responseJSON);
+				return;
+			}
+			usernameJSON.username = decoded.username;
+		}catch(err){
+			responseJSON.status = "error";
+			responseJSON.error = "You must be logged in to delete items.";
+			res.status(500).send(responseJSON);
+			return;
+		}
+	}
+	request.delete({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.16:3000/item/"+id,
+		body: JSON.stringify(usernameJSON)
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
