@@ -88,13 +88,26 @@ router.post("/additem",urlencodedParser,function(req,res){
 
 });
 
-router.post("/search",urlencodedParser,function(req,res){
+router.post("/search",urlencodedParser, async function(req,res){
 	var timestamp = req.body.timestamp;
 	var limit = req.body.limit;
 	var searchQuery = req.body.q;
 	var usernameQuery = req.body.username;
+	var followingFilter = req.body.following;
 	var searchJSON = {};
+	searchJSON.username = {};
 	var responseJSON = {};
+	var token = (req.cookies && req.cookies.token);
+	if(followingFilter == undefined){
+		followingFilter = true;
+	}
+	if(token && followingFilter){
+		var decoded = await jwt.verify(token,secretToken);
+		if(decoded){
+			searchJSON.username.$in = decoded.following;
+		}
+	}
+	
 	if(!timestamp || timestamp < 0){
 		timestamp = Math.floor(Date.now()/1000);
 	}
@@ -117,7 +130,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		searchJSON.content = {$regex:queryString};
 	}
 	if(usernameQuery){
-		searchJSON.username = usernameQuery;
+		searchJSON.username.$eq = usernameQuery;
 	}
 	searchJSON.timestamp = {$lte:timestamp};
 	MongoClient.connect(url,function(err,db){

@@ -271,6 +271,7 @@ router.post("/login", urlencodedParser, function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
+				responseJSON.following = result.following;
 				res.status(200).send(responseJSON);
 				db.close();
 			});
@@ -334,6 +335,8 @@ router.post("/getfollowing",function(req,res){
 		}
 	});
 });
+
+
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running account microservice at Port 3000');

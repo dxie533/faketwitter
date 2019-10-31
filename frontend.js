@@ -58,7 +58,7 @@ router.post("/login", urlencodedParser, async function(req,res){
 			res.status(500).send(body);
 			return;
 		}else{
-			var newToken = jwt.sign({username:username},secretToken,{expiresIn: 86400});
+			var newToken = jwt.sign({username:username,following:body.following},secretToken,{expiresIn: 86400});
 			res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 			responseJSON.status = "OK";
 			res.status(200).send(responseJSON);
