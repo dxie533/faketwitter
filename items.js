@@ -82,7 +82,6 @@ router.post("/search",urlencodedParser, async function(req,res){
 	var usernameQuery = req.body.username;
 	var followingFilter = req.body.following;
 	var searchJSON = {};
-	searchJSON.username = {};
 	var responseJSON = {};
 	var token = (req.cookies && req.cookies.token);
 	console.log(token);
