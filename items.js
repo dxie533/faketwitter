@@ -28,7 +28,6 @@ router.post("/additem",urlencodedParser,function(req,res){
 	var childType = req.body.childType;
 	var responseJSON = {};
 	var username = req.body.username;
-	console.log(token);
 	if(!itemContent || !username){
 		responseJSON.status = "error";
 		if(!username)
@@ -37,19 +36,6 @@ router.post("/additem",urlencodedParser,function(req,res){
 			responseJSON.error = "Content of item is missing.";
 		res.status(500).send(responseJSON);
 		return;
-	}
-	if(childType){
-		if(childType !== "retweet" && childType !== "reply" && childType != null){
-			responseJSON.status = "error";
-			if(!token){
-					responseJSON.error = "Please log in to add an item";
-					res.status(500).send(responseJSON);
-					return;
-			}
-			responseJSON.error = "Invalid child type.";
-			res.status(500).send(responseJSON);
-			return;
-		}
 	}
 			MongoClient.connect(url,function(err,db){
 			if(err){
