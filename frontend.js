@@ -436,7 +436,7 @@ router.post("/",function(req,res){
 	res.send(returnString);
 });
 
-router.get("/searchpage",function(req,res){
+router.get("/searchpage",async function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var loggedInString = "";
 	if(token){
