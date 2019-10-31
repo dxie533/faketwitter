@@ -307,7 +307,7 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 	});
 });
 
-router.post("/follow",function(req,res){
+router.post("/follow",async function(req,res){
 	var responseJSON = {};
 	var followJSON = {};
 	var username = req.body.username;
