@@ -271,7 +271,7 @@ router.post("/login", urlencodedParser, function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
-				responseJSON.following = result.following;
+				responseJSON.following = result[0].following;
 				res.status(200).send(responseJSON);
 				db.close();
 			});

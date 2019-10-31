@@ -104,6 +104,8 @@ router.post("/search",urlencodedParser, async function(req,res){
 	if(token && followingFilter){
 		var decoded = await jwt.verify(token,secretToken);
 		if(decoded){
+			if(searchJSON.username == undefined)
+				searchJSON.username = {};
 			searchJSON.username.$in = decoded.following;
 		}
 	}
@@ -130,6 +132,8 @@ router.post("/search",urlencodedParser, async function(req,res){
 		searchJSON.content = {$regex:queryString};
 	}
 	if(usernameQuery){
+		if(searchJSON.username == undefined)
+			searchJSON.username = {};
 		searchJSON.username.$eq = usernameQuery;
 	}
 	searchJSON.timestamp = {$lte:timestamp};
