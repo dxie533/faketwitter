@@ -98,6 +98,8 @@ router.post("/search",urlencodedParser, async function(req,res){
 	searchJSON.username = {};
 	var responseJSON = {};
 	var token = (req.cookies && req.cookies.token);
+	console.log(token);
+	console.log(followingFilter);
 	if(followingFilter == undefined){
 		followingFilter = true;
 	}
