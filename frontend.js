@@ -217,7 +217,7 @@ router.post("/search",urlencodedParser,function(req,res){
 		req.body.limit = 25;
 	request.post({
 		headers: {'content-type': 'application/json',
-		"Cookie":"token="+req.cookies.token;
+		"Cookie":"token="+req.cookies.token
 		},
 		url:  "http://192.168.122.16:3000/search",
 		body: JSON.stringify(req.body)
