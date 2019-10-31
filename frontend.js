@@ -18,6 +18,7 @@ var jwt = require('jsonwebtoken');
 var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
 var request = require('request');
+var cookieJar = request.jar();
 
 router.post("/login", urlencodedParser, async function(req,res){
 	var responseJSON = {};
@@ -215,11 +216,11 @@ router.post("/search",urlencodedParser,function(req,res){
 	else
 		req.body.limit = 25;
 	request.post({
-		headers: {'content-type': 'application/json',
-			"Cookie:":request.cookie("token="+req.cookies.token)
+		headers: {'content-type': 'application/json'
 		},
 		url:  "http://192.168.122.16:3000/search",
-		body: JSON.stringify(req.body)
+		body: JSON.stringify(req.body),
+		jar: cookieJar
 	}, function (err, response, body){
 			body = JSON.parse(body);
 		if(body.status === "error"){
