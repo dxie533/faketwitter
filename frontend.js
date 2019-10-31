@@ -216,11 +216,11 @@ router.post("/search",urlencodedParser,function(req,res){
 	else
 		req.body.limit = 25;
 	request.post({
-		headers: {'content-type': 'application/json'
+		headers: {'content-type': 'application/json',
+		"Cookie":"token="+req.cookies.token;
 		},
 		url:  "http://192.168.122.16:3000/search",
-		body: JSON.stringify(req.body),
-		jar: cookieJar
+		body: JSON.stringify(req.body)
 	}, function (err, response, body){
 			body = JSON.parse(body);
 		if(body.status === "error"){
