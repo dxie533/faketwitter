@@ -213,7 +213,7 @@ router.delete("/item/:id",function(req,res){
 		if(err) throw err;
 		if(!err){
 			var dbo = db.db("faketwitter");
-			dbo.collection("items").deleteOne({username:username, id:requestedId}),function(err,result){
+			dbo.collection("items").deleteOne({username:username, id:requestedId},function(err,result){
 				if(err) throw err;
 				if(err){
 					responseJSON.status = "error";
