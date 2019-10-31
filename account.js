@@ -322,7 +322,6 @@ router.post("/follow",function(req,res){
 						else{
 							responseJSON.status = "OK";
 							res.status(200).send(responseJSON);
-							db.close();
 						}
 					});
 				  });
