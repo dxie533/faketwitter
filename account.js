@@ -298,7 +298,7 @@ router.post("/follow",function(req,res){
 		if(direction){
 			if(!followingArray.includes(originUsername)){
 				followingArray.push(originUsername);
-				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, res) {
+				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, response) {
 					if (err) throw err;
 					if(err){
 						responseJSON.status = "error";
@@ -311,7 +311,7 @@ router.post("/follow",function(req,res){
 					MongoClient.connect(url, async function(err, db) {
 					if (err) throw err;
 					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
-					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,res){
+					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
 						if(err){
 							responseJSON.status = "error";
 							responseJSON.error = "Error updating origin following.";
@@ -335,7 +335,7 @@ router.post("/follow",function(req,res){
 		else{
 			if(followingArray.includes(originUsername)){
 				followingArray.splice(followingArray.indexOf(originUsername),1);
-				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, res) {
+				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, response) {
 					if (err) throw err;
 					if(err){
 						responseJSON.status = "error";
@@ -348,7 +348,7 @@ router.post("/follow",function(req,res){
 					MongoClient.connect(url, async function(err, db) {
 					if (err) throw err;
 					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
-					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,res){
+					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
 						if(err){
 							responseJSON.status = "error";
 							responseJSON.error = "Error updating origin following.";
