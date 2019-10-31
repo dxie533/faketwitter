@@ -321,7 +321,6 @@ router.post("/follow",async function(req,res){
 		responseJSON.status = "error";
 		responseJSON.error = "Username required to follow.";
 		res.status(500).send(responseJSON);
-		db.close();
 		return;
 	}
 	followJSON.targetUsername = username;
