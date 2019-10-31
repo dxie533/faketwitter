@@ -201,6 +201,7 @@ router.post("/search",urlencodedParser,function(req,res){
 	var timestamp = req.body.timestamp;
 	var limit = req.body.limit;
 	var responseJSON = {};
+	console.log(req.cookies.token);
 	if(!timestamp){
 		req.body.timestamp = Math.floor(Date.now()/1000)
 	}
