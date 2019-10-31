@@ -233,23 +233,7 @@ router.post("/login", urlencodedParser, function(req,res){
 	var username = req.body.username;
 	var password = req.body.password;
 	var token = (req.cookies && req.cookies.token);
-	/*if(token){
-		jwt.verify(token,secretToken,function(err,decoded){
-			if(decoded){
-				if(decoded.username == username){
-					responseJSON.status = "OK";
-					res.status(200).send(responseJSON);
-					return;
-				}
-			}
-		});
-	}
-	if(!username || !password){
-		responseJSON.status = "error";
-		responseJSON.error = "Missing password or username field.";
-		res.status(500).send(responseJSON);
-		return;
-	}*/
+
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
@@ -279,26 +263,111 @@ router.post("/login", urlencodedParser, function(req,res){
 	});
 });
 
-/*router.post("/logout", function(req,res){
-	var token = (req.cookies && req.cookies.token);
+router.post("/follow",function(req,res){
 	var responseJSON = {};
-	if(!token){
-		responseJSON.status = "OK";
-		res.status(200).send(responseJSON);
+	var originUsername = req.body.originUsername;//user that is following/unfollowing
+	var targetUsername = req.body.targetUsername;//user that is being followed/unfollowed
+	var following = req.body.following;//array of users being followed by the origin
+	var direction = req.body.direction; //following or unfollowing
+	if(!originUsername || !targetUsername || direction == undefined){
+		responseJSON.status = "error";
+		responseJSON.error = "Username required to follow.";
+		res.status(500).send(responseJSON);
+		db.close();
 		return;
 	}
-	if(token){
-		jwt.verify(token, secretToken, function(err,decoded){
-			if(decoded){
-				var newToken = jwt.sign({username:undefined},secretToken,{expiresIn:1});
-				res.cookie('token',newToken,{maxAge:100000, overwrite: true});
-			}
-			responseJSON.status = "OK";
-			res.status(200).send(responseJSON);
-		});
+	if(!following){
+		responseJSON.status = "error";
+		responseJSON.error = "Error while processing the following.";
+		res.status(500).send(responseJSON);
+		db.close();
+		return;
 	}
-});*/
+	MongoClient.connect(url, async function(err, db) {
+  		if (err) throw err;
+  		var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
+  		var result = await dbo.collection("users").find({ username: targetUsername}).toArray();
+		if(!result || result.length == 0){
+			responseJSON.status = "error";
+			responseJSON.error = "No such user to follow.";
+			res.status(500).send(responseJSON);
+			db.close();
+			return;
+		}
+		var followingArray = result[0].followers;
+		if(direction){
+			if(!followingArray.includes(originUsername)){
+				followingArray.push(originUsername);
+				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, res) {
+					if (err) throw err;
+					if(err){
+						responseJSON.status = "error";
+						responseJSON.error = "Error updating target followers.";
+						res.status(500).send(responseJSON);
+						db.close();
+						return;
+					}
+					db.close();
+					MongoClient.connect(url, async function(err, db) {
+					if (err) throw err;
+					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
+					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,res){
+						if(err){
+							responseJSON.status = "error";
+							responseJSON.error = "Error updating origin following.";
+							res.status(500).send(responseJSON);
+							db.close();
+							return;
+						}
+						else{
+							responseJSON.status = "OK";
+							res.status(200).send(responseJSON);
+							db.close();
+						}
+					});
+				  });
+				});
+			}	
+		}
+		else{
+			if(followingArray.includes(originUsername)){
+				followingArray.splice(followingArray.indexOf(originUsername),1);
+				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, res) {
+					if (err) throw err;
+					if(err){
+						responseJSON.status = "error";
+						responseJSON.error = "Error updating target followers.";
+						res.status(500).send(responseJSON);
+						db.close();
+						return;
+					}
+					db.close();
+					MongoClient.connect(url, async function(err, db) {
+					if (err) throw err;
+					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
+					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,res){
+						if(err){
+							responseJSON.status = "error";
+							responseJSON.error = "Error updating origin following.";
+							res.status(500).send(responseJSON);
+							db.close();
+							return;
+						}
+						else{
+							responseJSON.status = "OK";
+							res.status(200).send(responseJSON);
+							db.close();
+						}
+					});
+				  });
+				});
+			}
+		}
+	});
+});
 
+
+// HELLO DAVID: im not sure if this is correct but it should get the followers
 router.post("/getfollowing",function(req,res){
 	var responseJSON = {};
 	if(!req.body.username){
@@ -328,7 +397,7 @@ router.post("/getfollowing",function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
-				responseJSON.followers = result.followers;
+				responseJSON.followers = result[0].followers;
 				res.status(200).send(responseJSON);
 				db.close();
 			});

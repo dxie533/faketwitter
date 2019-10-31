@@ -307,6 +307,105 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 	});
 });
 
+router.post("/follow",function(req,res){
+	var responseJSON = {};
+	var followJSON = {};
+	var username = req.body.username;
+	var following = req.body.follow;
+	if(following == undefined){
+		following = true;
+	}
+	followJSON.direction = following;
+	var token = (req.cookies && req.cookies.token);
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "Username required to follow.";
+		res.status(500).send(responseJSON);
+		db.close();
+		return;
+	}
+	followJSON.targetUsername = username;
+	if(!token){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to follow this user.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	var followingArray;
+	if(token){
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(!decoded){
+				responseJSON.status = "error";
+				responseJSON.error = "You must be logged in to follow this user";
+				res.status(500).send(responseJSON);
+				return;
+			}
+			followJSON.originUsername = decoded.username;
+			followingArray = decoded.following; 
+		}catch(err){
+			responseJSON.status = "error";
+			responseJSON.error = "You must be logged in to follow this user.";
+			res.status(500).send(responseJSON);
+			return;
+		}
+	}
+	if(following){
+		if(followingArray.includes(username)){
+			responseJSON.status = "OK";
+			res.status(200).send(responseJSON);
+			return;
+		}
+		else{
+			followingArray.push(username);
+			followJSON.following = followingArray;
+			request.post({
+				headers: {'content-type': 'application/json'},
+				url:  "http://192.168.122.15:3000/follow",
+				body: JSON.stringify(followJSON)
+			}, function (err, response, body){
+				body = JSON.parse(body);
+				if(body.status === "error"){
+					res.status(500).send(body);
+					return;
+				}else{
+					var newToken = jwt.sign({username:username,following:followingArray},secretToken,{expiresIn: 86400});
+					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
+					responseJSON.status = "OK";
+					res.status(200).send(body);
+				}
+			});
+		}
+	}
+	else{
+		if(followingArray.includes(username)){
+			followingArray.splice(followingArray.indexOf(username),1);
+			followJSON.following = followingArray;
+			request.post({
+				headers: {'content-type': 'application/json'},
+				url:  "http://192.168.122.15:3000/follow",
+				body: JSON.stringify(followJSON)
+			}, function (err, response, body){
+				body = JSON.parse(body);
+				if(body.status === "error"){
+					res.status(500).send(body);
+					return;
+				}else{
+					var newToken = jwt.sign({username:username,following:followingArray},secretToken,{expiresIn: 86400});
+					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
+					responseJSON.status = "OK";
+					res.status(200).send(body);
+				}
+			});
+		}
+		else{
+			responseJSON.status = "OK";
+			res.status(200).send(responseJSON);
+			return;
+		}
+	}
+});
+
 
 //FRONT END GOES DOWN HERE
 router.get("/",function(req,res){
