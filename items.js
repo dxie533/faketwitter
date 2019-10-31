@@ -102,11 +102,15 @@ router.post("/search",urlencodedParser, async function(req,res){
 		followingFilter = true;
 	}
 	if(token && followingFilter){
-		var decoded = await jwt.verify(token,secretToken);
-		if(decoded){
-			if(searchJSON.username == undefined)
-				searchJSON.username = {};
-			searchJSON.username.$in = decoded.following;
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(decoded){
+				if(searchJSON.username == undefined)
+					searchJSON.username = {};
+				searchJSON.username.$in = decoded.following;
+			}
+		}catch(err){
+			
 		}
 	}
 	

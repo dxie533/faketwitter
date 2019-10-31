@@ -25,21 +25,25 @@ router.post("/login", urlencodedParser, async function(req,res){
 	var password = req.body.password;
 	var token = (req.cookies && req.cookies.token);
 	if(token){
-		var decoded = await jwt.verify(token,secretToken);/*,function(err,decoded){
+		try{
+			var decoded = await jwt.verify(token,secretToken);/*,function(err,decoded){
+				if(decoded){
+					if(decoded.username == username){
+						responseJSON.status = "OK";
+						res.status(200).send(responseJSON);
+						return;
+					}
+				}
+			});*/
 			if(decoded){
-				if(decoded.username == username){
-					responseJSON.status = "OK";
-					res.status(200).send(responseJSON);
-					return;
-				}
+					if(decoded.username == username){
+						responseJSON.status = "OK";
+						res.status(200).send(responseJSON);
+						return;
+					}
 			}
-		});*/
-		if(decoded){
-				if(decoded.username == username){
-					responseJSON.status = "OK";
-					res.status(200).send(responseJSON);
-					return;
-				}
+		}catch(err){
+			
 		}
 	}
 	if(!username || !password){
