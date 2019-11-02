@@ -442,11 +442,11 @@ router.get("/user/:username",function(req,res){
 					db.close();
 					return;
 				}
-				responseJSON.status = "OK";
 				responseUser.email = result[0].email;
 				responseUser.followers = result[0].followers;
 				responseUser.following = result[0].following;
-				responseJSON.user = result[0].followers;
+				responseJSON.status = "OK";
+				responseJSON.user = responseUser;
 				res.status(200).send(responseJSON);
 				db.close();
 			});
