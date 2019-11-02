@@ -120,7 +120,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 			queryString = queryString + "(\\b" + splitQuery[i] + "\\b)|"; 
 		}
 		queryString = queryString + "(\\b" + splitQuery[splitQuery.length-1] + "\\b)";
-		searchJSON.content = {$regex:queryString};
+		searchJSON.content = {$regex:queryString,$options:"i"};
 	}
 	if(usernameQuery){
 		if(searchJSON.username == undefined)
@@ -146,11 +146,43 @@ router.post("/search",urlencodedParser, async function(req,res){
 					db.close();
 					return;
 			}
+			var tempArray = result;
 			responseJSON.status = "OK";
-			responseJSON.items = result;
-			res.status(200).send(responseJSON);
-			db.close();
-			return;
+				responseJSON.items = tempArray;
+				res.status(200).send(responseJSON);
+				db.close();
+				return;
+			/*if(searchQuery){
+					dbo.collection("items").find(searchJSON).collation({locale:'en',strength:2}).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,secondaryResult){
+					if(err){
+							responseJSON.status = "error";
+							responseJSON.error = "Error retrieving items.";
+							res.send(responseJSON);
+							db.close();
+							return;
+					}
+					tempArray = tempArray.concat(secondaryResult);
+					tempArray.sort(function(x,y){
+						if(x.timestamp < y.timestamp)
+							return -1;
+						if(x.timestamp > y.timestamp)
+							return 1;
+						return 0;
+					});
+					responseJSON.status = "OK";
+					responseJSON.items = tempArray;
+					res.status(200).send(responseJSON);
+					db.close();
+					return;
+				});
+			}
+			else{
+				responseJSON.status = "OK";
+				responseJSON.items = tempArray;
+				res.status(200).send(responseJSON);
+				db.close();
+				return;
+			}*/
 		});
 	});
 });
