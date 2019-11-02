@@ -90,7 +90,7 @@ function getUser(){
 			}
 			if(results.status === "OK"){
 				var response = "";
-				response += "<div>Email:" + results.user.email + "<br/> Followers:" + results.user.followers + "<br/> Following:" + results.user.following;
+				response += "<div>Email: " + results.user.email + "<br/> Followers: " + results.user.followers + "<br/> Following: " + results.user.following;
 				document.getElementById("userResult").innerHTML = response;
 			}
 		}
@@ -119,7 +119,7 @@ function getPostsByUser(){
 				var response = "";
 				var i;
 				for(i in results.items){
-					response += "<div>post id:" + results.items[i] + "<br/>";
+					response += "<div>post id: " + results.items[i] + "<br/>";
 				}
 				document.getElementById("userPostResult").innerHTML = response;
 			}
@@ -149,12 +149,42 @@ function getFollowersByUser(){
 				var response = "";
 				var i;
 				for(i in results.users){
-					response += "<div>post id:" + results.users[i] + "<br/>";
+					response += "<div>Username: " + results.users[i] + "<br/>";
 				}
 				document.getElementById("userFollowerResult").innerHTML = response;
 			}
 		}
 	}
 	request.open("GET", "/user/"+user+"/followers",true);
+	request.send();
+}
+
+function getFollowingByUser(){
+	var userObject = {};
+	var user = document.getElementById("followingUserField").value;
+	var returnString = "";
+	if(!user || user == ""){
+		document.getElementById("userFollowingResult").innerHTML = "No username was entered";
+		return;
+	}
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+				document.getElementById("userFollowingResult").innerHTML = results.error;
+				return;
+			}
+			if(results.status === "OK"){
+				var response = "";
+				var i;
+				for(i in results.users){
+					response += "<div>Username: " + results.users[i] + "<br/>";
+				}
+				document.getElementById("userFollowingResult").innerHTML = response;
+			}
+		}
+	}
+	request.open("GET", "/user/"+user+"/following",true);
 	request.send();
 }
