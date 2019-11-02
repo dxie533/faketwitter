@@ -90,7 +90,7 @@ function getUser(){
 			}
 			if(results.status === "OK"){
 				var response = "";
-				response += "<div>Email:" + results.user.email + "<br/> Followers:" + results.user.followers + "<br/> Following:" + results.user.following";
+				response += "<div>Email:" + results.user.email + "<br/> Followers:" + results.user.followers + "<br/> Following:" + results.user.following;
 				document.getElementById("userResult").innerHTML = response;
 			}
 		}
