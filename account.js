@@ -443,8 +443,10 @@ router.get("/user/:username",function(req,res){
 					return;
 				}
 				responseUser.email = result[0].email;
-				responseUser.followers = result[0].followers;
-				responseUser.following = result[0].following;
+				//responseUser.followers = result[0].followers;
+				//responseUser.following = result[0].following;
+				responseUser.followers = result[0].followers.length;
+				responseUser.following = result[0].following.length;
 				responseJSON.status = "OK";
 				responseJSON.user = responseUser;
 				res.status(200).send(responseJSON);
@@ -454,6 +456,103 @@ router.get("/user/:username",function(req,res){
 	});
 });
 
+router.get("/user/:username/followers",function(req,res){
+	var responseJSON = {};
+	var requestedLimit = 50;
+	if(req.query.limit && req.query.limit < 200){
+		requestedLimit = req.query.limit;
+	}
+	else{
+		if(req.query.limit && req.query.limit > 200){
+			requestedLimit = 200;
+		}
+	}
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "User has no followers";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				//responseJSON.users = result[0].followers;
+				var resultList = result[0].followers.slice(0,requestedLimit);
+				responseJSON.items = resultList;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
+router.get("/user/:username/following",function(req,res){
+	var responseJSON = {};
+	var requestedLimit = 50;
+	if(req.query.limit && req.query.limit < 200){
+		requestedLimit = req.query.limit;
+	}
+	else{
+		if(req.query.limit && req.query.limit > 200){
+			requestedLimit = 200;
+		}
+	}
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "User is not following anyone";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				//responseJSON.users = result[0].following;
+				var resultList = result[0].following.slice(0,requestedLimit);
+				responseJSON.items = resultList;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
 
 app.use('/', router); 
 app.listen(process.env.port || 3000); 

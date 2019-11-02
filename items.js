@@ -238,6 +238,54 @@ router.delete("/item/:id",function(req,res){
 	});
 });
 
+router.get("/user/:username/posts",function(req,res){
+	var responseJSON = {};
+	var requestedLimit = 50;
+	if(req.query.limit && req.query.limit < 200){
+		requestedLimit = req.query.limit;
+	}
+	else{
+		if(req.query.limit && req.query.limit > 200){
+			requestedLimit = 200;
+		}
+	}
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("items").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "User has no posts";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				var resultList = result.slice(0,requestedLimit);
+				responseJSON.items = resultList.map(a => a.id);
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
 
 app.use('/', router); 
 app.listen(process.env.port || 3000); 

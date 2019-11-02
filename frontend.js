@@ -281,6 +281,78 @@ router.get("/user/:username", urlencodedParser,function(req,res){
 	});
 });
 
+router.get("/user/:username/posts", urlencodedParser,function(req,res){
+	var username = (req.params && req.params.username);
+	var responseJSON = {};
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "Missing username to get.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	request.get({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.16:3000/user/"+username +"/posts",
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
+router.get("/user/:username/followers", urlencodedParser,function(req,res){
+	var username = (req.params && req.params.username);
+	var responseJSON = {};
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "Missing username to get.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	request.get({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.15:3000/user/"+username +"/followers",
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
+router.get("/user/:username/following", urlencodedParser,function(req,res){
+	var username = (req.params && req.params.username);
+	var responseJSON = {};
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "Missing username to get.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	request.get({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.15:3000/user/"+username +"/following",
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
 router.delete("/item/:id", urlencodedParser,async function(req,res){
 	var id = (req.params && req.params.id);
 	var token = (req.cookies && req.cookies.token);
