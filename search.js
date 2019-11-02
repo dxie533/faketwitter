@@ -117,9 +117,9 @@ function getPostsByUser(){
 			}
 			if(results.status === "OK"){
 				var response = "";
-				results.items.forEach(function (element){
-					response += "<div>post ids:" + results.element + "<br/>";
-				})
+				for(int i = 0; i < results.items.length; i++){
+					response += "<div>post ids:" + results.items[i] + "<br/>";
+				}
 				document.getElementById("userPostResult").innerHTML = response;
 			}
 		}
