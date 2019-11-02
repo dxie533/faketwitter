@@ -275,6 +275,11 @@ router.get("/user/:username/posts",function(req,res){
 	if(req.body.limit && req.body.limit < 200){
 		requestedLimit = req.body.limit;
 	}
+	else{
+		if(req.body.limit && req.body.limit > 200){
+			requestedLimit = 200;
+		}
+	}
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";

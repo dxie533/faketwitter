@@ -458,6 +458,15 @@ router.get("/user/:username",function(req,res){
 
 router.get("/user/:username/followers",function(req,res){
 	var responseJSON = {};
+	var requestedLimit = 50;
+	if(req.body.limit && req.body.limit < 200){
+		requestedLimit = req.body.limit;
+	}
+	else{
+		if(req.body.limit && req.body.limit > 200){
+			requestedLimit = 200;
+		}
+	}
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
@@ -486,7 +495,9 @@ router.get("/user/:username/followers",function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
-				responseJSON.users = result[0].followers;
+				//responseJSON.users = result[0].followers;
+				var resultList = result[0].slice(0,requestedLimit);
+				responseJSON.items = resultList.map(a => a.followers);
 				res.status(200).send(responseJSON);
 				db.close();
 			});
@@ -496,6 +507,15 @@ router.get("/user/:username/followers",function(req,res){
 
 router.get("/user/:username/following",function(req,res){
 	var responseJSON = {};
+	var requestedLimit = 50;
+	if(req.body.limit && req.body.limit < 200){
+		requestedLimit = req.body.limit;
+	}
+	else{
+		if(req.body.limit && req.body.limit > 200){
+			requestedLimit = 200;
+		}
+	}
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
@@ -524,7 +544,9 @@ router.get("/user/:username/following",function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
-				responseJSON.users = result[0].following;
+				//responseJSON.users = result[0].following;
+				var resultList = result[0].slice(0,requestedLimit);
+				responseJSON.items = resultList.map(a => a.following);
 				res.status(200).send(responseJSON);
 				db.close();
 			});
