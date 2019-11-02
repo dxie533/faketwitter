@@ -152,6 +152,37 @@ router.post("/search",urlencodedParser, async function(req,res){
 				res.status(200).send(responseJSON);
 				db.close();
 				return;
+			/*if(searchQuery){
+					dbo.collection("items").find(searchJSON).collation({locale:'en',strength:2}).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,secondaryResult){
+					if(err){
+							responseJSON.status = "error";
+							responseJSON.error = "Error retrieving items.";
+							res.send(responseJSON);
+							db.close();
+							return;
+					}
+					tempArray = tempArray.concat(secondaryResult);
+					tempArray.sort(function(x,y){
+						if(x.timestamp < y.timestamp)
+							return -1;
+						if(x.timestamp > y.timestamp)
+							return 1;
+						return 0;
+					});
+					responseJSON.status = "OK";
+					responseJSON.items = tempArray;
+					res.status(200).send(responseJSON);
+					db.close();
+					return;
+				});
+			}
+			else{
+				responseJSON.status = "OK";
+				responseJSON.items = tempArray;
+				res.status(200).send(responseJSON);
+				db.close();
+				return;
+			}*/
 		});
 	});
 });
@@ -241,17 +272,17 @@ router.delete("/item/:id",function(req,res){
 router.get("/user/:username/posts",function(req,res){
 	var responseJSON = {};
 	var requestedLimit = 50;
-	console.log(requestedLimit);
+	console.log("before" + requestedLimit);
 	if(req.query.limit && req.query.limit < 200){
 		requestedLimit = req.query.limit;
 	}
 	else{
 		if(req.query.limit && req.query.limit > 200){
 			requestedLimit = 200;
-			console.log(requestedLimit);
+			console.log("during" + requestedLimit);
 		}
 	}
-	console.log(requestedLimit);
+	console.log("after" + requestedLimit);
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
