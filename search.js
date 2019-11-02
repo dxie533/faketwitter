@@ -98,3 +98,30 @@ function getUser(){
 	request.open("GET", "/user/"+user,true);
 	request.send();
 }
+
+function getPostsByUser(){
+	var userObject = {};
+	var user = document.getElementById("postUserField").value;
+	var returnString = "";
+	if(!user || user == ""){
+		document.getElementById("userPostResult").innerHTML = "No username was entered";
+		return;
+	}
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+				document.getElementById("userPostResult").innerHTML = results.error;
+				return;
+			}
+			if(results.status === "OK"){
+				var response = "";
+				response += "<div>post ids:" + results.items + "<br/>";
+				document.getElementById("userPostResult").innerHTML = response;
+			}
+		}
+	}
+	request.open("GET", "/user/"+user+"/posts",true);
+	request.send();
+}

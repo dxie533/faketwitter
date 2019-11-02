@@ -454,7 +454,6 @@ router.get("/user/:username",function(req,res){
 	});
 });
 
-
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running account microservice at Port 3000');
