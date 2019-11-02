@@ -303,7 +303,8 @@ router.get("/user/:username/posts",function(req,res){
 					return;
 				}
 				responseJSON.status = "OK";
-				responseJSON.items = result[0].id.slice(0,requestedLimit);
+				var resultList = result.slice(0,requestedLimit);
+				responseJSON.items = resultList.map(a => a.id);
 				res.status(200).send(responseJSON);
 				db.close();
 			});
