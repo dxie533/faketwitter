@@ -71,3 +71,30 @@ function getItem(){
 	request.open("GET", "/item/"+item,true);
 	request.send();
 }
+
+function getUser(){
+	var userObject = {};
+	var user = document.getElementById("userField").value;
+	var returnString = "";
+	if(!user || user == ""){
+		document.getElementById("userResult").innerHTML = "No username was entered";
+		return;
+	}
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+				document.getElementById("userResult").innerHTML = results.error;
+				return;
+			}
+			if(results.status === "OK"){
+				var response = "";
+				response += "<div>Email:" + results.user.email + "<br/> Followers:" + results.user.followers + "<br/> Following:" + results.user.following";
+				document.getElementById("userResult").innerHTML = response;
+			}
+		}
+	}
+	request.open("GET", "/user/"+user,true);
+	request.send();
+}
