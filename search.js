@@ -117,7 +117,7 @@ function getPostsByUser(){
 			}
 			if(results.status === "OK"){
 				var response = "";
-				int i;
+				var i;
 				for(for i in results.items){
 					response += "<div>post ids:" + results.items[i] + "<br/>";
 				}
