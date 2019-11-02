@@ -120,7 +120,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 			queryString = queryString + "(\\b" + splitQuery[i] + "\\b)|"; 
 		}
 		queryString = queryString + "(\\b" + splitQuery[splitQuery.length-1] + "\\b)";
-		searchJSON.content = {$regex:queryString};
+		searchJSON.content = {$regex:queryString,$options:"i"};
 	}
 	if(usernameQuery){
 		if(searchJSON.username == undefined)
@@ -147,8 +147,13 @@ router.post("/search",urlencodedParser, async function(req,res){
 					return;
 			}
 			var tempArray = result;
-			if(searchQuery){
-					dbo.collection("items").find(searchJSON).collattion({locale:'en',strength:2}).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,secondaryResult){
+			responseJSON.status = "OK";
+				responseJSON.items = tempArray;
+				res.status(200).send(responseJSON);
+				db.close();
+				return;
+			/*if(searchQuery){
+					dbo.collection("items").find(searchJSON).collation({locale:'en',strength:2}).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,secondaryResult){
 					if(err){
 							responseJSON.status = "error";
 							responseJSON.error = "Error retrieving items.";
@@ -177,7 +182,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 				res.status(200).send(responseJSON);
 				db.close();
 				return;
-			}
+			}*/
 		});
 	});
 });
