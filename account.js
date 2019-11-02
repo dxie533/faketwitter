@@ -459,11 +459,11 @@ router.get("/user/:username",function(req,res){
 router.get("/user/:username/followers",function(req,res){
 	var responseJSON = {};
 	var requestedLimit = 50;
-	if(req.body.limit && req.body.limit < 200){
-		requestedLimit = req.body.limit;
+	if(req.query.limit && req.query.limit < 200){
+		requestedLimit = req.query.limit;
 	}
 	else{
-		if(req.body.limit && req.body.limit > 200){
+		if(req.query.limit && req.query.limit > 200){
 			requestedLimit = 200;
 		}
 	}
@@ -508,11 +508,11 @@ router.get("/user/:username/followers",function(req,res){
 router.get("/user/:username/following",function(req,res){
 	var responseJSON = {};
 	var requestedLimit = 50;
-	if(req.body.limit && req.body.limit < 200){
-		requestedLimit = req.body.limit;
+	if(req.query.limit && req.query.limit < 200){
+		requestedLimit = req.query.limit;
 	}
 	else{
-		if(req.body.limit && req.body.limit > 200){
+		if(req.query.limit && req.query.limit > 200){
 			requestedLimit = 200;
 		}
 	}
