@@ -413,6 +413,8 @@ router.post("/getfollowing",function(req,res){
 });
 
 router.get("/user/:username",function(req,res){
+	res.status(200).send("wow");
+	/*
 	var responseJSON = {};
 	var responseUser = {};
 	var requestedUser = req.params.username;
@@ -452,6 +454,7 @@ router.get("/user/:username",function(req,res){
 			});
 		}
 	});
+	*/
 });
 
 
