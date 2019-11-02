@@ -297,7 +297,7 @@ router.get("/user/:username/posts",function(req,res){
 				}
 				if(result.length == 0){
 					responseJSON.status = "error";
-					responseJSON.error = "User has posts";
+					responseJSON.error = "User has no posts";
 					res.status(500).send(responseJSON);
 					db.close();
 					return;
