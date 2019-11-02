@@ -272,17 +272,14 @@ router.delete("/item/:id",function(req,res){
 router.get("/user/:username/posts",function(req,res){
 	var responseJSON = {};
 	var requestedLimit = 50;
-	console.log("before" + requestedLimit);
 	if(req.query.limit && req.query.limit < 200){
 		requestedLimit = req.query.limit;
 	}
 	else{
 		if(req.query.limit && req.query.limit > 200){
 			requestedLimit = 200;
-			console.log("during" + requestedLimit);
 		}
 	}
-	console.log("after" + requestedLimit);
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
@@ -303,7 +300,7 @@ router.get("/user/:username/posts",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no posts";
 					res.status(500).send(responseJSON);

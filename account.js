@@ -435,7 +435,7 @@ router.get("/user/:username",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no info";
 					res.status(500).send(responseJSON);
@@ -487,7 +487,7 @@ router.get("/user/:username/followers",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no followers";
 					res.status(500).send(responseJSON);
@@ -536,7 +536,7 @@ router.get("/user/:username/following",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User is not following anyone";
 					res.status(500).send(responseJSON);
