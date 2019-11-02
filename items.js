@@ -272,14 +272,17 @@ router.delete("/item/:id",function(req,res){
 router.get("/user/:username/posts",function(req,res){
 	var responseJSON = {};
 	var requestedLimit = 50;
+	console.log(requestedLimit);
 	if(req.query.limit && req.query.limit < 200){
 		requestedLimit = req.query.limit;
 	}
 	else{
 		if(req.query.limit && req.query.limit > 200){
 			requestedLimit = 200;
+			console.log(requestedLimit);
 		}
 	}
+	console.log(requestedLimit);
 	var requestedUser = req.params.username;
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
