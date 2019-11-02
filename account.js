@@ -454,6 +454,82 @@ router.get("/user/:username",function(req,res){
 	});
 });
 
+router.get("/user/:username/followers",function(req,res){
+	var responseJSON = {};
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "User has no followers";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				responseJSON.users = result[0].followers;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
+router.get("/user/:username/following",function(req,res){
+	var responseJSON = {};
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0){
+					responseJSON.status = "error";
+					responseJSON.error = "User is not following anyone";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				responseJSON.users = result[0].following;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
 console.log('Running account microservice at Port 3000');

@@ -119,12 +119,42 @@ function getPostsByUser(){
 				var response = "";
 				var i;
 				for(i in results.items){
-					response += "<div>post ids:" + results.items[i] + "<br/>";
+					response += "<div>post id:" + results.items[i] + "<br/>";
 				}
 				document.getElementById("userPostResult").innerHTML = response;
 			}
 		}
 	}
 	request.open("GET", "/user/"+user+"/posts",true);
+	request.send();
+}
+
+function getFollowersByUser(){
+	var userObject = {};
+	var user = document.getElementById("followerUserField").value;
+	var returnString = "";
+	if(!user || user == ""){
+		document.getElementById("userFollowerResult").innerHTML = "No username was entered";
+		return;
+	}
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+				document.getElementById("userFollowerResult").innerHTML = results.error;
+				return;
+			}
+			if(results.status === "OK"){
+				var response = "";
+				var i;
+				for(i in results.users){
+					response += "<div>post id:" + results.users[i] + "<br/>";
+				}
+				document.getElementById("userFollowerResult").innerHTML = response;
+			}
+		}
+	}
+	request.open("GET", "/user/"+user+"/followers",true);
 	request.send();
 }
