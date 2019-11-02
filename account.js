@@ -413,7 +413,6 @@ router.post("/getfollowing",function(req,res){
 });
 
 router.get("/user/:username",function(req,res){
-	res.status(200).send("hi");
 	var responseJSON = {};
 	var responseUser = {};
 	var requestedUser = req.params.username;
