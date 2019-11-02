@@ -412,6 +412,48 @@ router.post("/getfollowing",function(req,res){
 	});
 });
 
+router.get("/user/:username",function(req,res){
+	var responseJSON = {};
+	var responseUser = {};
+	var requestedUser = req.params.username;
+	if(!req.params.username){
+		responseJSON.error = "No username provided";
+		responseJSON.status = "error";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	MongoClient.connect(url, function(err, db) { 	
+		if(err) throw err;
+		if(!err){
+			var dbo = db.db("faketwitter");
+			dbo.collection("users").find({username:requestedUser}).toArray(function(err,result){
+				if(err) throw err;
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error finding the username in the database.";
+					res.status(500).send(responseJSON);
+					db.close(); 
+					return;
+				}
+				if(result.length == 0{
+					responseJSON.status = "error";
+					responseJSON.error = "User has no info";
+					res.status(500).send(responseJSON);
+					db.close();
+					return;
+				}
+				responseJSON.status = "OK";
+				responseUser.email = result[0].email;
+				responseUser.followers = result[0].followers;
+				responseUser.following = result[0].following;
+				responseJSON.user = result[0].followers;
+				res.status(200).send(responseJSON);
+				db.close();
+			});
+		}
+	});
+});
+
 
 app.use('/', router); 
 app.listen(process.env.port || 3000); 
