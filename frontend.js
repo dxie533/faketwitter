@@ -340,7 +340,7 @@ router.get("/user/:username/following", urlencodedParser,function(req,res){
 	}
 	request.get({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.15:3000/user/"+username +"/following?limit=" + req.query.limit",
+		url:  "http://192.168.122.15:3000/user/"+username +"/following?limit=" + req.query.limit,
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
