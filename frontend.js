@@ -410,7 +410,7 @@ router.post("/follow",async function(req,res){
 router.get("/",function(req,res){
 	res.send("<html><head><script src = '/verify.js'></script><link rel = \"stylesheet\" type=\"text/css\" href=\"/change.css\"></head> <body><h1>Lightweight Twitter<br/>Login<br/><form action = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/' method = 'post' onsubmit = 'return validateLogin()' id = 'loginForm' >Username:<input type='text' name='name' id = 'loginUsername'><br/>Password:<input type = 'text' name = 'password' id = 'loginPassword'><input type = 'submit'></form><div id = 'loginResult'></div>"
 	+ "<br/> Register <br/>Username:<input type = 'text' id ='registerUsername' ></input><br/>Password: <input type = 'text' id = 'registerPassword'></input><br/> Email: <input type = 'text' id = 'registerEmail'></input><button onclick = 'createDisabledAccount()'>Register</button><br/><div id = 'registrationResult'></div>"
-	+ "<br /> <br/> Validate <div>Email:<input type = 'text' id = 'validateEmail'></input><br/>Validation Code: <input type = 'text' id = 'validateCode'></input><button onclick = 'validate()'>Validate</button><div id = 'validationResult'></div></div> <br/> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for users</a>"
+	+ "<br /> <br/> Validate <div>Email:<input type = 'text' id = 'validateEmail'></input><br/>Validation Code: <input type = 'text' id = 'validateCode'></input><button onclick = 'validate()'>Validate</button><div id = 'validationResult'></div></div> <br/> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchuserspage'>Search for users</a>"
 	+ "</body></h1></html>");
 });
 
@@ -451,6 +451,26 @@ router.get("/searchpage",async function(req,res){
 	}
 	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a>	<h1>Search for an individual post</h1>Item ID:<input type = 'text' id = 'itemField'></input><button onclick = 'getItem()'>Search for Item</button><div id = 'itemResult'></div><br/>"+
 	"<h1>Search for posts</h1><br/>Search for post with content:<input type = 'text' id = 'searchQuery'></input><br/>Filter search by username:<input type = 'text' id = 'usernameOnly'></input></br>"+loggedInString+"Get all posts on or before unix time:<input type = 'number' id = 'timestamp'</input><br/>Number of items to search for (Max 100):<input type = 'number' max:'100' min:'1' id = 'count' value='25'></input><button onclick = 'search()'>Execute Search</button><br/><h1>Search Result</h1><div id = 'searchResult'></div><br/></body></html>";
+	res.send(returnString);
+});
+
+router.get("/searchuserspage",async function(req,res){
+	var token = (req.cookies && req.cookies.token);
+	//MIGHT NOT NEED THIS BECAUSE WE WON'T CARE ABOUT BEING LOGGED IN
+	//var loggedInString = "";
+	/*if(token){
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(decoded){
+				loggedInString = "Filter to followed users only:<input type = 'checkbox' id='followersOnly' checked></input><br/>";
+			} 
+		}catch(err){
+			
+		}
+	}*/
+	//
+	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a>	<h1>Search for a user</h1>Username:<input type = 'text' id = 'userField'></input><button onclick = 'getUser()'>Search for User</button><div id = 'userResult'></div><br/>"+
+	"List a user's posts:<input type = 'text' id = 'postUserField'></input><button onclick = 'getPostsByUser()'>Execute Search</button><div id = 'userPostResult'></div><br/>List a user's followers:<input type = 'text' id = 'followerUserField'></input><button onclick = 'getFollowersByUser()'>Execute Search</button><div id = 'userFollowerResult'></div><br/>List who a user is following:<input type = 'text' id = 'followingUserField'></input><button onclick = 'getFollowingByUser()'>Execute Search</button><div id = 'userFollowingResult'></div><br/></br></body></html>";
 	res.send(returnString);
 });
 
