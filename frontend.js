@@ -456,7 +456,7 @@ router.post("/",function(req,res){
 			return;
 		});
 	}
-	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><div id = 'addResult'></div></body></html>";
+	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><h1>Your posts</h1><div id = 'useritems'></div><div id = 'addResult'></div></body></html>";
 	res.send(returnString);
 });
 
