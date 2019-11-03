@@ -362,12 +362,14 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing item ID to delete.";
 		res.status(500).send(responseJSON);
+		console.log("no id");
 		return;
 	}
 	if(!token){
 		responseJSON.status = "error";
 		responseJSON.error = "You must be logged in to delete items.";
 		res.status(500).send(responseJSON);
+		console.log("no token");
 		return;
 	}
 	if(token){
@@ -377,12 +379,14 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 				responseJSON.status = "error";
 				responseJSON.error = "You must be logged in to delete items.";
 				res.status(500).send(responseJSON);
+				console.log("invalid token");
 				return;
 			}
 			usernameJSON.username = decoded.username;
 		}catch(err){
 			responseJSON.status = "error";
 			responseJSON.error = "You must be logged in to delete items.";
+			console.log("invalid token");
 			res.status(500).send(responseJSON);
 			return;
 		}
