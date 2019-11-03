@@ -435,7 +435,7 @@ router.get("/user/:username",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no info";
 					res.status(500).send(responseJSON);
@@ -487,7 +487,7 @@ router.get("/user/:username/followers",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no followers";
 					res.status(500).send(responseJSON);
@@ -497,7 +497,7 @@ router.get("/user/:username/followers",function(req,res){
 				responseJSON.status = "OK";
 				//responseJSON.users = result[0].followers;
 				var resultList = result[0].followers.slice(0,requestedLimit);
-				responseJSON.items = resultList;
+				responseJSON.users = resultList;
 				res.status(200).send(responseJSON);
 				db.close();
 			});
@@ -536,7 +536,7 @@ router.get("/user/:username/following",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(result.length == 0){
+				if(!result | result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User is not following anyone";
 					res.status(500).send(responseJSON);
@@ -546,7 +546,7 @@ router.get("/user/:username/following",function(req,res){
 				responseJSON.status = "OK";
 				//responseJSON.users = result[0].following;
 				var resultList = result[0].following.slice(0,requestedLimit);
-				responseJSON.items = resultList;
+				responseJSON.users = resultList;
 				res.status(200).send(responseJSON);
 				db.close();
 			});

@@ -292,7 +292,7 @@ router.get("/user/:username/posts", urlencodedParser,function(req,res){
 	}
 	request.get({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.16:3000/user/"+username +"/posts",
+		url:  "http://192.168.122.16:3000/user/"+username +"/posts?limit=" + req.query.limit,
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
@@ -316,7 +316,7 @@ router.get("/user/:username/followers", urlencodedParser,function(req,res){
 	}
 	request.get({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.15:3000/user/"+username +"/followers",
+		url:  "http://192.168.122.15:3000/user/"+username +"/followers?limit=" + req.query.limit,
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
@@ -340,7 +340,7 @@ router.get("/user/:username/following", urlencodedParser,function(req,res){
 	}
 	request.get({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.15:3000/user/"+username +"/following",
+		url:  "http://192.168.122.15:3000/user/"+username +"/following?limit=" + req.query.limit,
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
