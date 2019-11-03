@@ -241,8 +241,6 @@ router.delete("/item/:id",function(req,res){
 		db.close(); 
 		return;
 	}
-	console.log(username);
-	console.log(requestedId);
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
@@ -256,7 +254,6 @@ router.delete("/item/:id",function(req,res){
 					db.close(); 
 					return;
 				}
-				console.log(result);
 				if(result.result.n == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "No such item exists under your username.";

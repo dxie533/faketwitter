@@ -470,6 +470,7 @@ router.post("/follow",async function(req,res){
 					return;
 				}else{
 					var newToken = jwt.sign({username:followJSON.originUsername,following:followingArray},secretToken,{expiresIn: 86400});
+					console.log(followJSON.originUsername);
 					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 					responseJSON.status = "OK";
 					res.status(200).send(body);
@@ -493,6 +494,7 @@ router.post("/follow",async function(req,res){
 				}else{
 					var newToken = jwt.sign({username:username,following:followingArray},secretToken,{expiresIn: 86400});
 					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
+					console.log(username);
 					responseJSON.status = "OK";
 					res.status(200).send(body);
 				}
