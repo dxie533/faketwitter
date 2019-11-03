@@ -100,6 +100,7 @@ function getUser(){
 }
 
 function getPostsByUser(){
+	var postLimit = document.getElementById("postLimit").value;
 	var userObject = {};
 	var user = document.getElementById("postUserField").value;
 	var returnString = "";
@@ -125,11 +126,12 @@ function getPostsByUser(){
 			}
 		}
 	}
-	request.open("GET", "/user/"+user+"/posts",true);
+	request.open("GET", "/user/"+user+"/posts?limit="+postLimit,true);
 	request.send();
 }
 
 function getFollowersByUser(){
+	var followerLimit = document.getElementById("followerLimit").value;
 	var userObject = {};
 	var user = document.getElementById("followerUserField").value;
 	var returnString = "";
@@ -155,11 +157,12 @@ function getFollowersByUser(){
 			}
 		}
 	}
-	request.open("GET", "/user/"+user+"/followers",true);
+	request.open("GET", "/user/"+user+"/followers?limit="+followerLimit,true);
 	request.send();
 }
 
 function getFollowingByUser(){
+	var followingLimit = document.getElementById("followingLimit").value;
 	var userObject = {};
 	var user = document.getElementById("followingUserField").value;
 	var returnString = "";
@@ -185,6 +188,6 @@ function getFollowingByUser(){
 			}
 		}
 	}
-	request.open("GET", "/user/"+user+"/following",true);
+	request.open("GET", "/user/"+user+"/following?limit="+followerLimit,true);
 	request.send();
 }
