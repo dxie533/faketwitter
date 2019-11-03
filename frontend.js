@@ -545,7 +545,7 @@ router.post("/",function(req,res){
 						}else{
 							var generatedPostString = "";
 							for(var i = 0; i < results.items.length; i++){
-								generatedPostString += "<div id = '"+ results.items[i].id+ "'>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br/><button onclick = 'deletePost('"+results.items[i].id+"');'>Delete Post</button>"+"</div><br/>";
+								generatedPostString += "<div id = '"+ results.items[i].id+ "'>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br/><button onclick = 'deletePost("+results.items[i].id+"');'>Delete Post</button>"+"</div><br/>";
 							}
 							var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/>Delete specific item with id:<input type = 'text' id = 'deleteContent'></input><button onclick = 'deleteSelected()'>Delete Item</button><br/><div id = 'deleteResult'></div><h1>Your 100 latest posts</h1><div id = 'useritems'>"+generatedPostString+"</div><div id = 'addResult'></div></body></html>";
 							res.status(200).send(returnString);
