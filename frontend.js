@@ -494,7 +494,7 @@ router.post("/follow",async function(req,res){
 					res.status(500).send(body);
 					return;
 				}else{
-					var newToken = jwt.sign({username:username,following:followingArray},secretToken,{expiresIn: 86400});
+					var newToken = jwt.sign({username:followJSON.originUsername,following:followingArray},secretToken,{expiresIn: 86400});
 					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 					console.log("Token from regular username" + username);
 					responseJSON.status = "OK";
