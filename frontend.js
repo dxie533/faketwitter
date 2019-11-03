@@ -534,7 +534,7 @@ router.post("/",function(req,res){
 						body: JSON.stringify(searchJSON)
 					}, function (err, response, results){
 							results = JSON.parse(results);
-						if(body.status === "error"){
+						if(results.status === "error"){
 							res.status(500).send(results);
 							return;
 						}else{
