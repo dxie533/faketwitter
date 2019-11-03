@@ -513,23 +513,84 @@ router.get("/",function(req,res){
 router.post("/",function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var username = req.body.name;
+	var searchJSON = {};
+	searchJSON.username = username;
+	searchJSON.following = false;
+	searchJSON.limit = 100;
 	if(!token){
-		res.send("Please log in to access this content");
+		res.status(500).send("Please log in to access this content");
 		return;
 	}	
 	if(token){
 		jwt.verify(token,secretToken,function(err,decoded){
 			if(decoded){
 				username = decoded.username;
+					request.post({
+						headers: {'content-type': 'application/json',
+						"Cookie":"token="+req.cookies.token
+						},
+						url:  "http://192.168.122.16:3000/search",
+						body: JSON.stringify(searchJSON)
+					}, function (err, response, results){
+							results = JSON.parse(results);
+						if(body.status === "error"){
+							res.status(500).send(results);
+							return;
+						}else{
+							var generatedPostString = "";
+							for(var i = 0; i < results.items.length; i++){
+								generatedPostString += "<div id = '"+ results.items[i].id+ "'>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br/><button onclick = 'deletePost("+results.items[i].id+");'>Delete Post</button>"+"</div><br/>";
+							}
+							var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><h1>Your 100 latest posts</h1><div id = 'useritems'>"+generatedPostString+"</div><div id = 'addResult'></div></body></html>";
+							res.status(200).send(returnString);
+							//res.status(200).send(body);
+						}
+					});
 				return;
 			}
-			res.send("Please log in to access this content");
-			res.end();
-			return;
+			else{
+				res.send("Please log in to access this content");
+				res.end();
+				return;
+			}
 		});
 	}
-	var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><button onclick = 'addItem()'>Add post</button><br/><h1>Your posts</h1><div id = 'useritems'></div><div id = 'addResult'></div></body></html>";
-	res.send(returnString);
+	
+});
+
+router.post("/getPostsFromUser", function(req,res){
+	var token = (req.cookies && req.cookies.token);
+	if(!token){
+				responseJSON.status = "error";
+				responseJSON.error = "User not logged in";
+				res.status(500).send(responseJSON);
+				return;
+	}
+	if(token){
+		jwt.verify(token,secretToken, function(err,decoded){
+			if(!decoded){
+				responseJSON.status = "error";
+				responseJSON.error = "User not logged in";
+				res.status(500).send(responseJSON);
+				return;
+			}
+			req.body.username = decoded.username;
+			request.post({
+					headers: {'content-type': 'application/json'},
+					url: "http://192.168.122.16:3000/additem",
+					body: JSON.stringify(req.body)
+				}, function (err, response, body){
+					body = JSON.parse(body);
+					if(body.status === "error"){
+						res.status(500).send(body);
+						return;
+					}else{
+						responseJSON.status = "OK";
+						res.status(200).send(body);
+					}
+				});
+		});
+	}
 });
 
 router.get("/searchpage",async function(req,res){

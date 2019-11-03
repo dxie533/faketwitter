@@ -41,3 +41,7 @@ var request = new XMLHttpRequest();
 	request.open("POST","/logout",true);
 	request.send();
 }
+
+function getItems(){
+	
+}
