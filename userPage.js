@@ -96,6 +96,7 @@ function follow(){
 	}
 	followJSON.username = content;
 	followJSON.follow = true;
+	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
@@ -124,6 +125,7 @@ function unfollow(){
 	}
 	followJSON.username = content;
 	followJSON.follow = false;
+	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
