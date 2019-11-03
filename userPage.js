@@ -113,6 +113,7 @@ function follow(){
 		}
 	}
 	request.open("POST", "/follow",true);
+		request.setRequestHeader("Content-Type","application/json");
 	request.send(JSON.stringify(followJSON));
 }
 
@@ -141,5 +142,6 @@ function unfollow(){
 		}
 	}
 	request.open("POST", "/follow",true);
+		request.setRequestHeader("Content-Type","application/json");
 	request.send(JSON.stringify(followJSON));
 }
