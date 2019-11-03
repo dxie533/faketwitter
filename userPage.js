@@ -72,7 +72,7 @@ function deletePost(id){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
 			if(results.status === "error"){
-				if(result.error === "No such item exists under your username."){
+				if(results.error === "No such item exists under your username."){
 					document.getElementById(""+id).innerHTML = "Item has already been deleted!";
 				}
 				return;
@@ -85,4 +85,59 @@ function deletePost(id){
 	}
 	request.open("DELETE", "/item/"+id,true);
 	request.send();
+}
+
+function follow(){
+	var content = document.getElementById("followField").value;
+	var followJSON = {};
+	
+	if(content == ""){
+		document.getElementById("addResult").innerHTML = "No username entered to follow!";
+	}
+	followJSON.username = content;
+	followJSON.follow = true;
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+					document.getElementById("addResult").innerHTML = results.error;
+					return;
+			}
+				
+			
+			if(results.status === "OK"){
+				document.getElementById("addResult").innerHTML = "You are now following user " + content +  "!";
+				return;
+			}
+		}
+	}
+	request.open("POST", "/follow",true);
+	request.send(JSON.stringify(followJSON));
+}
+
+function unfollow(){
+	var content = document.getElementById("unfollowField").value;
+	var followJSON = {};
+	
+	if(content == ""){
+		document.getElementById("addResult").innerHTML = "No username entered to unfollow!";
+	}
+	followJSON.username = content;
+	followJSON.follow = false;
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+					document.getElementById("addResult").innerHTML = results.error;
+					return;
+			}
+	
+			if(results.status === "OK"){
+				document.getElementById("addResult").innerHTML = "You are now unfollowing user " + content +  "!";
+				return;
+			}
+		}
+	}
+	request.open("POST", "/follow",true);
+	request.send(JSON.stringify(followJSON));
 }
