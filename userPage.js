@@ -80,6 +80,6 @@ function deletePost(id){
 			}
 		}
 	}
-	request.open("DELETE", "/item/"+content,true);
+	request.open("DELETE", "/item/"+id,true);
 	request.send();
 }
