@@ -72,6 +72,9 @@ function deletePost(id){
 		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
 			var results = JSON.parse(request.responseText);
 			if(results.status === "error"){
+				if(result.error === "No such item exists under your username."){
+					document.getElementById(""+id).innerHTML = "Item has already been deleted!";
+				}
 				return;
 			}
 			if(results.status === "OK"){
