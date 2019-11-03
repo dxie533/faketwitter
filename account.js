@@ -497,7 +497,7 @@ router.get("/user/:username/followers",function(req,res){
 				responseJSON.status = "OK";
 				//responseJSON.users = result[0].followers;
 				var resultList = result[0].followers.slice(0,requestedLimit);
-				responseJSON.items = resultList;
+				responseJSON.users = resultList;
 				res.status(200).send(responseJSON);
 				db.close();
 			});
@@ -546,7 +546,7 @@ router.get("/user/:username/following",function(req,res){
 				responseJSON.status = "OK";
 				//responseJSON.users = result[0].following;
 				var resultList = result[0].following.slice(0,requestedLimit);
-				responseJSON.items = resultList;
+				responseJSON.users = resultList;
 				res.status(200).send(responseJSON);
 				db.close();
 			});
