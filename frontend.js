@@ -413,6 +413,7 @@ router.post("/follow",async function(req,res){
 	var followJSON = {};
 	var username = req.body.username;
 	var following = req.body.follow;
+	console.log(username);
 	if(following == undefined){
 		following = true;
 	}
@@ -470,7 +471,7 @@ router.post("/follow",async function(req,res){
 					return;
 				}else{
 					var newToken = jwt.sign({username:followJSON.originUsername,following:followingArray},secretToken,{expiresIn: 86400});
-					console.log(followJSON.originUsername);
+					console.log("Token from followJSON"followJSON.originUsername);
 					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 					responseJSON.status = "OK";
 					res.status(200).send(body);
@@ -494,7 +495,7 @@ router.post("/follow",async function(req,res){
 				}else{
 					var newToken = jwt.sign({username:username,following:followingArray},secretToken,{expiresIn: 86400});
 					res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
-					console.log(username);
+					console.log("Token from regular username" + username);
 					responseJSON.status = "OK";
 					res.status(200).send(body);
 				}
