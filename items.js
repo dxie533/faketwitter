@@ -256,6 +256,7 @@ router.delete("/item/:id",function(req,res){
 					db.close(); 
 					return;
 				}
+				console.log(result);
 				if(result.result.n == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "No such item exists under your username.";
