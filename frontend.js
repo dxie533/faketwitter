@@ -393,6 +393,7 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 		body: JSON.stringify(usernameJSON)
 	}, function (err, response, body){
 		body = JSON.parse(body);
+		console.log(body);
 		if(body.status === "error"){
 			res.status(500).send(body);
 			return;
