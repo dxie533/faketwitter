@@ -241,6 +241,8 @@ router.delete("/item/:id",function(req,res){
 		db.close(); 
 		return;
 	}
+	console.log(username);
+	console.log(requestedId);
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
