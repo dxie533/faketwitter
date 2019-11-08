@@ -559,40 +559,6 @@ router.post("/",function(req,res){
 	
 });
 
-router.post("/getPostsFromUser", function(req,res){
-	var token = (req.cookies && req.cookies.token);
-	if(!token){
-				responseJSON.status = "error";
-				responseJSON.error = "User not logged in";
-				res.status(500).send(responseJSON);
-				return;
-	}
-	if(token){
-		jwt.verify(token,secretToken, function(err,decoded){
-			if(!decoded){
-				responseJSON.status = "error";
-				responseJSON.error = "User not logged in";
-				res.status(500).send(responseJSON);
-				return;
-			}
-			req.body.username = decoded.username;
-			request.post({
-					headers: {'content-type': 'application/json'},
-					url: "http://192.168.122.16:3000/additem",
-					body: JSON.stringify(req.body)
-				}, function (err, response, body){
-					body = JSON.parse(body);
-					if(body.status === "error"){
-						res.status(500).send(body);
-						return;
-					}else{
-						responseJSON.status = "OK";
-						res.status(200).send(body);
-					}
-				});
-		});
-	}
-});
 
 router.get("/searchpage",async function(req,res){
 	var token = (req.cookies && req.cookies.token);
@@ -614,19 +580,6 @@ router.get("/searchpage",async function(req,res){
 
 router.get("/searchuserspage",async function(req,res){
 	var token = (req.cookies && req.cookies.token);
-	//MIGHT NOT NEED THIS BECAUSE WE WON'T CARE ABOUT BEING LOGGED IN
-	//var loggedInString = "";
-	/*if(token){
-		try{
-			var decoded = await jwt.verify(token,secretToken);
-			if(decoded){
-				loggedInString = "Filter to followed users only:<input type = 'checkbox' id='followersOnly' checked></input><br/>";
-			} 
-		}catch(err){
-			
-		}
-	}*/
-	//
 	var returnString = "<html><head><script src = '/search.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a>	<h1>Search for a user</h1>Username:<input type = 'text' id = 'userField'></input><button onclick = 'getUser()'>Search for User</button><div id = 'userResult'></div><br/>"+
 	"List a user's posts:<input type = 'text' id = 'postUserField'></input>Limit(max of 200): <input type = 'number' max:'200' min:'1' id = 'postLimit' value='50'></input><button onclick = 'getPostsByUser()'>Execute Search</button><div id = 'userPostResult'></div><br/>List a user's followers:<input type = 'text' id = 'followerUserField'></input>Limit(max of 200): <input type = 'number' max:'200' min:'1' id = 'followerLimit' value='50'></input>Limit(max of 200): <input type = 'number' max:'200' min:'1' id = 'followingLimit' value='50'></input><button onclick = 'getFollowersByUser()'>Execute Search</button><div id = 'userFollowerResult'></div><br/>List who a user is following:<input type = 'text' id = 'followingUserField'></input><button onclick = 'getFollowingByUser()'>Execute Search</button><div id = 'userFollowingResult'></div><br/></br></body></html>";
 	res.send(returnString);

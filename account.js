@@ -40,18 +40,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			//
 			errorJSON.error = false;
 			errorJSON.waiting = false;
-  			var result = await dbo.collection("disabledUsers").find({ username: user}).toArray();/*function(err, result) {
-    				if (err) throw err;
-    				if(!err && result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Username is already taken and is pending verification.";
-					errorJSON.error = true;
-					res.status(500).send(returnJSON);
-					db.close();
-					globalerror = true;
-					return;
-				}
-  			});*/
+  			var result = await dbo.collection("disabledUsers").find({ username: user}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Username is already taken and is pending verification.";
@@ -60,20 +49,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					db.close();
 					return;
 			}
-			result = await dbo.collection("disabledUsers").find( {email: email}).toArray();/*function(err,result){
-				if(err) throw err;
-				if(!err && result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Email is already taken and is pending verification.";
-					res.status(500).send(returnJSON);
-					db.close();
-					errorJSON.error = true;
-					return;
-				}
-			});
-			if(errorJSON.error){
-				return;
-			}*/
+			result = await dbo.collection("disabledUsers").find( {email: email}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Email is already taken and is pending verification.";
@@ -82,20 +58,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					errorJSON.error = true;
 					return;
 			}
-			result = await dbo.collection("users").find( {email: email}).toArray();/*function(err,result){
-				if(err) throw err;
-				if(!err && result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Username is already taken.";
-					res.status(500).send(returnJSON);
-					db.close();
-					errorJSON.error = true;
-					return;
-				}
-			});
-			if(errorJSON.error){
-				return;
-			}*/
+			result = await dbo.collection("users").find( {email: email}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Username is already taken.";
@@ -104,20 +67,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					errorJSON.error = true;
 					return;
 			}
-			result = await dbo.collection("users").find( {username: user }).toArray();/*function(err,result){
-				if(err) throw err;
-				if(!err && result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Email is already in use.";
-					res.status(500).send(returnJSON);
-					db.close();
-					errorJSON.error = true;
-					return;
-				}
-			});
-			if(errorJSON.error){
-				return;
-			}*/
+			result = await dbo.collection("users").find( {username: user }).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Email is already in use.";
@@ -131,7 +81,6 @@ router.post("/adduser",urlencodedParser,function(req,res){
 				key: key}, function(err,result){
 				if(err) throw err;
 				if(!err){
-					//console.log(user + " " + password + " " + email + " " + key + " " + "stored in db");
 					const transporter = nodemailer.createTransport({/* This section should be forwarded to a rabbitmq service then picked up by a mailing micorservice */
 				            port: 25,                                                                                                               
 				            host: 'localhost',
@@ -298,7 +247,7 @@ router.post("/follow",function(req,res){
 		if(direction){
 			if(!followingArray.includes(originUsername)){
 				followingArray.push(originUsername);
-				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}}, function(err, response) {
+				dbo.collection("users").updateOne({username:targetUsername}, {$set:{followers:followingArray}},function(err, response) {
 					if (err) throw err;
 					if(err){
 						responseJSON.status = "error";
@@ -307,11 +256,7 @@ router.post("/follow",function(req,res){
 						db.close();
 						return;
 					}
-					db.close();
-					MongoClient.connect(url, async function(err, db) {
-					if (err) throw err;
-					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
-					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
+					dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
 						if(err){
 							responseJSON.status = "error";
 							responseJSON.error = "Error updating origin following.";
@@ -324,7 +269,7 @@ router.post("/follow",function(req,res){
 							res.status(200).send(responseJSON);
 						}
 					});
-				  });
+
 				});
 			}
 			else{
@@ -344,11 +289,7 @@ router.post("/follow",function(req,res){
 						db.close();
 						return;
 					}
-					db.close();
-					MongoClient.connect(url, async function(err, db) {
-					if (err) throw err;
-					var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the items
-					var result = await dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
+					dbo.collection("users").updateOne({ username: originUsername},{$set:{following:following}},function(err,response){
 						if(err){
 							responseJSON.status = "error";
 							responseJSON.error = "Error updating origin following.";
@@ -362,7 +303,7 @@ router.post("/follow",function(req,res){
 							db.close();
 						}
 					});
-				  });
+
 				});
 			}
 			else{
