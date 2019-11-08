@@ -188,6 +188,6 @@ function getFollowingByUser(){
 			}
 		}
 	}
-	request.open("GET", "/user/"+user+"/following?limit="+followerLimit,true);
+	request.open("GET", "/user/"+user+"/following?limit="+followingLimit,true);
 	request.send();
 }
