@@ -28,4 +28,11 @@ table schema
 		- username 
 		- id (of item the user liked)
 		
+- media database
+	- fs.files(metadata table)
+	- fs.chunks(file content table)
+	- additionalMetadata
+		- username
+		- postId
+		- filename
 // we will most likely require a media collection sooner or later but thats milestone 2

@@ -38,18 +38,15 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			//
 			// separate as in a completely newmongodb client,
 			//
-			errorJSON.error = false;
-			errorJSON.waiting = false;
-  			var result = await dbo.collection("disabledUsers").find({ username: user}).toArray();
+  			var result = await dbo.collection("disabledUsers").find({$or:[{ username: user},{email: email}]}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
-					returnJSON.error = "Username is already taken and is pending verification.";
-					errorJSON.error = true;
+					returnJSON.error = "Username or email has already been taken and is pending verification.";
 					res.status(500).send(returnJSON);
 					db.close();
 					return;
 			}
-			result = await dbo.collection("disabledUsers").find( {email: email}).toArray();
+			/*result = await dbo.collection("disabledUsers").find( {email: email}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Email is already taken and is pending verification.";
@@ -57,17 +54,16 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					db.close();
 					errorJSON.error = true;
 					return;
-			}
-			result = await dbo.collection("users").find( {email: email}).toArray();
+			}*/
+			result = await dbo.collection("users").find({$or:[{ username: user},{email: email}]}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
-					returnJSON.error = "Username is already taken.";
+					returnJSON.error = "Username or email is already taken.";
 					res.status(500).send(returnJSON);
 					db.close();
-					errorJSON.error = true;
 					return;
 			}
-			result = await dbo.collection("users").find( {username: user }).toArray();
+			/*result = await dbo.collection("users").find( {username: user }).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Email is already in use.";
@@ -75,7 +71,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					db.close();
 					errorJSON.error = true;
 					return;
-			}
+			}*/
 			var key = crypto.randomBytes(20).toString('hex');
 			dbo.collection("disabledUsers").insertOne({username:user, password:password, email:email,
 				key: key}, function(err,result){
