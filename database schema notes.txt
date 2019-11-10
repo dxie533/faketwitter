@@ -23,6 +23,7 @@ table schema
 		- retweeted
 		- content
 		- timestamp
+		- parent (if applicable)
 		
 	- likes collection
 		- username 
@@ -34,5 +35,4 @@ table schema
 	- additionalMetadata
 		- username
 		- postId
-		- filename
-// we will most likely require a media collection sooner or later but thats milestone 2
+		- filenames
