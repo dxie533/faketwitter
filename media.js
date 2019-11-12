@@ -36,22 +36,29 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var username;
 	var responseJSON = {};
+	if(token){
+		jwt.verify(token, secretToken, function(err,decoded){
+			if(decoded){
+				username = decoded.username;
+			}
+			if(!decoded){
+				responseJSON.status = "error";
+				responseJSON.error = "You must be logged in to add media files";
+				res.status(500).send(responseJSON);
+				return;
+			}
+		});
+	}
 	if(req.file == undefined){
 		responseJSON.status = "error";
 		responseJSON.error = "Error entering media into media server";
 		res.status(500).send(responseJSON);
 		return;
 	}
-	if(token){
-		jwt.verify(token, secretToken, function(err,decoded){
-			if(decoded){
-				username = decoded.username;
-			}
-		});
-	}
+
 	mongodb.MongoClient.connect(dbConnection,function(error,db){
-		var dbo = db.db("media");
-		dbo.collection("additionalMetadata").insertOne({username:user, filename:req.file.filename, itemId:"undefined"}, function(err,result){
+		var dbo = db.db("faketwitter");
+		dbo.collection("fs.files").updateOne({filename:req.file.filename},{username:username, itemId:"undefined"}, function(err,result){
 				if(err){
 					responseJSON.status = "error";
 					responseJSON.error = "Error entering metadata into media server";
@@ -69,7 +76,7 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 router.get("/media/:id",function(req,res){
 	var fileName = (req.params && req.params.id)
 	mongodb.MongoClient.connect(dbConnection,function(error,db){
-			var dbo = db.db("media");
+			var dbo = db.db("faketwitter");
 			var bucket = new mongodb.GridFSBucket(dbo);
 			dbo.collection("fs.files").find({filename:fileName}).toArray(function(err,result){		
 				if(result.length == 0){

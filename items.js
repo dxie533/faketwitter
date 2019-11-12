@@ -52,6 +52,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				newEntry.retweeted = 0;
 				newEntry.content = itemContent;
 				newEntry.usersWhoLiked = [];
+				newEntry.media = [];
 				newEntry.timestamp = Math.floor(Date.now()/1000);
 			dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames
 				if(err){
@@ -201,25 +202,52 @@ router.delete("/item/:id",function(req,res){
 		if(err) throw err;
 		if(!err){
 			var dbo = db.db("faketwitter");
-			dbo.collection("items").deleteOne({username:username, id:requestedId},function(err,result){
+			dbo.collection("items").find({username:username, id:requestedId}).project({_id: 0 }).toArray(function(err,result){
 				if(err) throw err;
 				if(err){
 					responseJSON.status = "error";
-					responseJSON.error = "Error deleting item from database.";
+					responseJSON.error = "Error grabbing items from database.";
 					res.status(500).send(responseJSON);
 					db.close(); 
 					return;
 				}
-				if(result.result.n == 0){
+				if(result.length == 0){
 					responseJSON.status = "error";
-					responseJSON.error = "No such item exists under your username.";
+					responseJSON.error = "No such item exists.";
 					res.status(500).send(responseJSON);
-					db.close(); 
+					db.close();
 					return;
 				}
-				responseJSON.status = "OK";
-				res.status(200).send(responseJSON);
-				db.close();
+				var mediaArray = result[0].media;
+				var parentID;
+				if(result[0].parent != null && result[0].childType == "retweet"){
+					parentID = result[0].parent;
+					dbo.collection("items").updateOne({id:parentID},{$inc:{retweeted:-1}})
+				}
+				dbo.collection("items").deleteOne({username:username, id:requestedId},function(err,result){
+					if(err) throw err;
+					if(err){
+						responseJSON.status = "error";
+						responseJSON.error = "Error deleting item from database.";
+						res.status(500).send(responseJSON);
+						db.close(); 
+						return;
+					}
+					responseJSON.status = "OK";
+					res.status(200).send(responseJSON);
+					db.close();
+					if(mediaArray.length > 0){
+						MongoClient.connect("mongodb://192.168.122.21:27017",function(error,db){
+							var dbo = db.db("faketwitter");
+							var bucket = new mongodb.GridFSBucket(dbo);
+							for(var i = 0; i < mediaArray.length; i++){
+								bucket.delete(mediaArray[i],function(error){
+								});
+							}
+						});
+					}
+				});
+
 			});
 		}
 	});
