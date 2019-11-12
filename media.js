@@ -58,7 +58,7 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 
 	mongodb.MongoClient.connect(dbConnection,function(error,db){
 		var dbo = db.db("media");
-		dbo.collection("fs.files").updateOne({filename:req.file.filename},{username:username, itemId:"undefined"}, function(err,result){
+		dbo.collection("fs.files").updateOne({filename:req.file.filename},{$set:{username:username, itemId:"undefined"}}, function(err,result){
 				if(err){
 					responseJSON.status = "error";
 					responseJSON.error = "Error entering metadata into media server";
