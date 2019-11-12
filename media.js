@@ -11,8 +11,8 @@ var cookieParser = require('cookie-parser');
 app.use(urlencodedParser);
 app.use(bodyParser.json());
 app.use(cookieParser());
-var dbUrl = "mongodb://localhost:27017/media";
-var dbConnection = "mongodb://localhost:27017";
+var dbUrl = "mongodb://192.168.122.21:27017/media";
+var dbConnection = "mongodb://192.168.122.21:27017";
 var jwt = require('jsonwebtoken');
 var secretToken = "helloworld";
 var storage = new GridFsStorage({

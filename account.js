@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 var d = new Date();
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";//again this should be its own service
+var url = "mongodb://192.168.122.19:27017/";//again this should be its own service
 var jwt = require('jsonwebtoken');
 var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
@@ -46,15 +46,6 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					db.close();
 					return;
 			}
-			/*result = await dbo.collection("disabledUsers").find( {email: email}).toArray();
-			if(!result || result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Email is already taken and is pending verification.";
-					res.status(500).send(returnJSON);
-					db.close();
-					errorJSON.error = true;
-					return;
-			}*/
 			result = await dbo.collection("users").find({$or:[{ username: user},{email: email}]}).toArray();
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
@@ -63,15 +54,6 @@ router.post("/adduser",urlencodedParser,function(req,res){
 					db.close();
 					return;
 			}
-			/*result = await dbo.collection("users").find( {username: user }).toArray();
-			if(!result || result.length > 0){
-					returnJSON.status = "error";
-					returnJSON.error = "Email is already in use.";
-					res.status(500).send(returnJSON);
-					db.close();
-					errorJSON.error = true;
-					return;
-			}*/
 			var key = crypto.randomBytes(20).toString('hex');
 			dbo.collection("disabledUsers").insertOne({username:user, password:password, email:email,
 				key: key}, function(err,result){

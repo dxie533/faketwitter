@@ -24,10 +24,7 @@ table schema
 		- content
 		- timestamp
 		- parent (if applicable)
-		
-	- likes collection
-		- username 
-		- id (of item the user liked)
+		- array of usernames who liked this post
 		
 - media database
 	- fs.files(metadata table)

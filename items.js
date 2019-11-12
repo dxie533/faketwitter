@@ -1,7 +1,3 @@
-//var url = "mongodb://localhost:27017/";//This should be a separate microservice which may be later sharded
-//this should be its own separate microservice
-//login microservice
-//general ui microservice
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -17,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 var d = new Date();
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var url = "mongodb://192.168.122.20:27017/";
 var jwt = require('jsonwebtoken');
 var secretToken = "helloworld";
 app.use(express.static(path.join(__dirname,'/assets')));
@@ -160,7 +156,6 @@ router.get("/item/:id",function(req,res){
 	var responseJSON = {};
 	var responseItem = {};
 	var requestedId = req.params.id;
-	//res.send(); if you do this we cant send anything else after this or the server crashes
 	MongoClient.connect(url, function(err, db) { 	
 		if(err) throw err;
 		if(!err){
@@ -181,15 +176,6 @@ router.get("/item/:id",function(req,res){
 					db.close();
 					return;
 				}
-				/*responseProperty = {}; no need for this since mongodb returns a json object aka its not mysql
-				responseItem.id = result[0].id;
-				responseItem.username = result[0].username;
-				responseProperty.likes = result[0].likes;
-				responseItem.property = responseProperty;
-				responseItem.retweeted = result[0].retweeted;
-				responseItem.content = result[0].content;
-				responseItem.timestamp = result[0].timestamp;
-				responseJSON.item = responseItem;*/
 				responseJSON.status = "OK";
 				responseJSON.item = result[0];
 				res.status(200).send(responseJSON);

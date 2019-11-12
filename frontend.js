@@ -27,15 +27,7 @@ router.post("/login", urlencodedParser, async function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	if(token){
 		try{
-			var decoded = await jwt.verify(token,secretToken);/*,function(err,decoded){
-				if(decoded){
-					if(decoded.username == username){
-						responseJSON.status = "OK";
-						res.status(200).send(responseJSON);
-						return;
-					}
-				}
-			});*/
+			var decoded = await jwt.verify(token,secretToken);
 			if(decoded){
 					if(decoded.username == username){
 						responseJSON.status = "OK";
