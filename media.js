@@ -42,12 +42,15 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 				username = decoded.username;
 			}
 			if(!decoded){
-				responseJSON.status = "error";
-				responseJSON.error = "You must be logged in to add media files";
-				res.status(500).send(responseJSON);
 				return;
 			}
 		});
+	}
+	if(!username){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to add media files";
+		res.status(500).send(responseJSON);
+		return;
 	}
 	if(req.file == undefined){
 		responseJSON.status = "error";
