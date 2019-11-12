@@ -57,7 +57,7 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 	}
 
 	mongodb.MongoClient.connect(dbConnection,function(error,db){
-		var dbo = db.db("faketwitter");
+		var dbo = db.db("media");
 		dbo.collection("fs.files").updateOne({filename:req.file.filename},{username:username, itemId:"undefined"}, function(err,result){
 				if(err){
 					responseJSON.status = "error";
@@ -76,7 +76,7 @@ router.post("/addmedia", upload.single('content'), function(req,res){
 router.get("/media/:id",function(req,res){
 	var fileName = (req.params && req.params.id)
 	mongodb.MongoClient.connect(dbConnection,function(error,db){
-			var dbo = db.db("faketwitter");
+			var dbo = db.db("media");
 			var bucket = new mongodb.GridFSBucket(dbo);
 			dbo.collection("fs.files").find({filename:fileName}).toArray(function(err,result){		
 				if(result.length == 0){
