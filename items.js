@@ -89,7 +89,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 									db.close();
 									return;
 								});
-							}
+							});
 					}
 				}	
 				else{
