@@ -22,6 +22,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 	var token = (req.cookies && req.cookies.token);
 	var itemContent = req.body.content;
 	var childType = req.body.childType;
+	var media = req.body.media;
 	var responseJSON = {};
 	var username = req.body.username;
 	if(!itemContent || !username){
@@ -34,41 +35,88 @@ router.post("/additem",urlencodedParser,function(req,res){
 		return;
 	}
 			MongoClient.connect(url,function(err,db){
-			if(err){
-				responseJSON.status = "error";
-				responseJSON.error = "Error connecting to database.";
-				res.status(500).send(responseJSON);
-				return;
-			}
-			var dbo = db.db("faketwitter");
-			var newEntry = {};
-				newEntry.username = username;
-				newEntry.id = crypto.randomBytes(32).toString('hex');
-				if(childType){
-					newEntry.childType = childType;
-				}
-				newEntry.property = {};
-				newEntry.property.likes = 0;
-				newEntry.retweeted = 0;
-				newEntry.content = itemContent;
-				newEntry.usersWhoLiked = [];
-				newEntry.media = [];
-				newEntry.timestamp = Math.floor(Date.now()/1000);
-			dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames
 				if(err){
 					responseJSON.status = "error";
-					responseJSON.error = "Error inserting a new item.";
+					responseJSON.error = "Error connecting to database.";
 					res.status(500).send(responseJSON);
-					db.close();
 					return;
 				}
-		
-				responseJSON.status = "OK";
-				responseJSON.id = newEntry.id;
-				res.status(200).send(responseJSON);
-				db.close();
-				return;
-			});
+				var dbo = db.db("faketwitter");
+				var newEntry = {};
+					newEntry.username = username;
+					newEntry.id = crypto.randomBytes(32).toString('hex');
+					if(childType){//perform checking of what type and what actions to take ### hello david you might need to async the db query since we have to grab the content of the parent first otherwise it might add it to the db before we grabbed hte parent content and you might also have to move all the stuff into a separate if else statement so we avoid the above (similar to what i did for media)
+						newEntry.childType = childType;
+					}
+				if(!media && media.length > 0 && (childType == "reply" || childType == null)){
+					MongoClient.connect("mongodb://192.168.122.21:27017", async function(err,db2){
+							var dbo2 = db2.db("media");
+							var queryResult = await dbo2.collection("fs.files").find({username:username,filename:{$in:media},itemId:"undefined"}).toArray();
+							if(queryResult.length != media.length){
+								responseJSON.status = "error";
+								responseJSON.error = "One or more media items do not belong to you or are already assigned to another post.";
+								res.status(500).send(responseJSON);
+								db.close();
+								return;
+							}
+							newEntry.property = {};
+							newEntry.property.likes = 0;
+							newEntry.retweeted = 0;
+							newEntry.content = itemContent;
+							newEntry.usersWhoLiked = [];
+							newEntry.media = media;
+							newEntry.timestamp = Math.floor(Date.now()/1000);
+							dbo2.collection("fs.files").update({filename:{$in:media}},{$set:{itemId:newEntry.id}},{multi:true} function(err,editResult){
+								if(err){
+										responseJSON.status = "error";
+										responseJSON.error = "Error updating item metadata";
+										res.status(500).send(responseJSON);
+										dbo2.close();
+										return;
+								}
+								dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames		
+									if(err){
+										responseJSON.status = "error";
+										responseJSON.error = "Error inserting a new item.";
+										res.status(500).send(responseJSON);
+										db.close();
+										return;
+									}
+							
+									responseJSON.status = "OK";
+									responseJSON.id = newEntry.id;
+									res.status(200).send(responseJSON);
+									db.close();
+									return;
+								});
+							}
+					}
+				}	
+				else{
+						newEntry.property = {};
+						newEntry.property.likes = 0;
+						newEntry.retweeted = 0;
+						newEntry.content = itemContent;
+						newEntry.usersWhoLiked = [];
+						newEntry.media = [];
+						newEntry.timestamp = Math.floor(Date.now()/1000);
+					dbo.collection("items").insertOne(newEntry,function(err,result){//again this might be a shard later on so we will have to check for ranges of usernames
+						if(err){
+							responseJSON.status = "error";
+							responseJSON.error = "Error inserting a new item.";
+							res.status(500).send(responseJSON);
+							db.close();
+							return;
+						}
+				
+						responseJSON.status = "OK";
+						responseJSON.id = newEntry.id;
+						res.status(200).send(responseJSON);
+						db.close();
+						return;
+					});
+				}
+			
 		});
 
 });
