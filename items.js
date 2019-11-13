@@ -67,7 +67,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							newEntry.usersWhoLiked = [];
 							newEntry.media = media;
 							newEntry.timestamp = Math.floor(Date.now()/1000);
-							dbo2.collection("fs.files").update({filename:{$in:media}},{$set:{itemId:newEntry.id}},{multi:true}, function(err,editResult){
+							dbo2.collection("fs.files").updateMany({filename:{$in:media}},{$set:{itemId:newEntry.id}},{multi:true}, function(err,editResult){
 								if(err){
 										responseJSON.status = "error";
 										responseJSON.error = "Error updating item metadata";
@@ -287,7 +287,7 @@ router.delete("/item/:id",function(req,res){
 					db.close();
 					if(mediaArray.length > 0){
 						MongoClient.connect("mongodb://192.168.122.21:27017",function(error,db){
-							var dbo = db.db("faketwitter");
+							var dbo = db.db("media");
 							var bucket = new mongodb.GridFSBucket(dbo);
 							for(var i = 0; i < mediaArray.length; i++){
 								bucket.delete(mediaArray[i],function(error){
