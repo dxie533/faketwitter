@@ -90,7 +90,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 									return;
 								});
 							});
-					}
+					});
 				}	
 				else{
 						newEntry.property = {};
