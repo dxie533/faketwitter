@@ -66,7 +66,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							newEntry.usersWhoLiked = [];
 							newEntry.media = media;
 							newEntry.timestamp = Math.floor(Date.now()/1000);
-							dbo2.collection("fs.files").update({filename:{$in:media}},{$set:{itemId:newEntry.id}},{multi:true} function(err,editResult){
+							dbo2.collection("fs.files").update({filename:{$in:media}},{$set:{itemId:newEntry.id}},{multi:true}, function(err,editResult){
 								if(err){
 										responseJSON.status = "error";
 										responseJSON.error = "Error updating item metadata";
