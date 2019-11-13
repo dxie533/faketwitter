@@ -49,13 +49,16 @@ router.post("/additem",urlencodedParser,function(req,res){
 					if(childType){//perform checking of what type and what actions to take ### hello david you might need to async the db query since we have to grab the content of the parent first otherwise it might add it to the db before we grabbed hte parent content and you might also have to move all the stuff into a separate if else statement so we avoid the above (similar to what i did for media)
 						newEntry.childType = childType;
 					}
-				if(media && media.length > 0 && (childType == "reply" || childType == null)){
+					else{
+						newEntry.childType = null;
+					}
+				if(media && media.length > 0 && (childType == "reply" || childType == null || !childType)){
 					MongoClient.connect("mongodb://192.168.122.21:27017", async function(err,db2){
 							var dbo2 = db2.db("media");
 							var queryResult = await dbo2.collection("fs.files").find({username:username,filename:{$in:media},itemId:"undefined"}).toArray();
 							if(queryResult.length != media.length){
 								responseJSON.status = "error";
-								responseJSON.error = "One or more media items do not belong to you or are already assigned to another post.";
+								responseJSON.error = "One or more media items do not belong to you or are already assigned to another post or simply do not exist.";
 								res.status(500).send(responseJSON);
 								db.close();
 								return;
