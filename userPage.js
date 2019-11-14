@@ -166,7 +166,7 @@ function updateAvailableMedia(){
 	
 			if(results.status === "OK"){
 				for(var i = 0; i < results.array.length; i++){
-					media.options[media.options.length] = new Option(results.array[i], results.array[i]);
+					media.options[media.options.length] = new Option(results.array[i].filename, results.array[i].filename);
 				}
 				return;
 			}
