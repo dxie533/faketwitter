@@ -176,7 +176,7 @@ function updateAvailableMedia(){
 	request.send();
 }
 
-function getSelectedMedia(selectBox){
+function getSelectedMedia(select){
 	var result = [];
         var options = select && select.options;
         var opt;
