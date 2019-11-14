@@ -104,6 +104,43 @@ router.get("/media/:id",function(req,res){
 	
 });
 
+router.get("/usermedia",function(req,res){
+	var token = req.cookies.token;
+	var username;
+	var responseJSON = {};
+	if(!token){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to get items.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	if(token){
+			jwt.verify(token,secretToken,function(err,decoded){
+				if(!decoded){
+					responseJSON.status = "error";
+					responseJSON.error = "You must be logged in to get items.";
+					res.status(500).send(responseJSON);
+					return;
+				}
+				username = decoded.username;
+			});
+	}
+	mongodb.MongoClient.connect(dbConnection,function(error,db){
+			var dbo = db.db("media");
+			dbo.collection("fs.files").find({username:username,itemId:"undefined"}).toArray(function(err,result){
+				if(err){
+					responseJSON.status = "error";
+					responseJSON.error = "Error obtaining items";
+					res.status(500).send(responseJSON);
+					return;
+				}
+				responseJSON.status = "OK";
+				responseJSON.array = result;
+				res.status(200).send(responseJSON);	
+			});
+	 });
+});
+
 //maybe just delete from the item delete endpoint
 router.get("/delete",function(req,res){
         var fileName = req.query.filename;
