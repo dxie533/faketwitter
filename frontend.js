@@ -494,6 +494,57 @@ router.post("/follow",async function(req,res){
 	}
 });
 
+router.post("/item/:id/like",async function(req,res){
+	var responseJSON = {};
+	var likeJSON = {};
+	var like = req.body.like;
+	
+	if(like == undefined){
+		like = true;
+	}
+	likeJSON.direction = like;
+	var token = (req.cookies && req.cookies.token);
+	if(!token){
+		responseJSON.status = "error";
+		responseJSON.error = "You must be logged in to like this post.";
+		res.status(500).send(responseJSON);
+		return;
+	}
+	if(token){
+		try{
+			var decoded = await jwt.verify(token,secretToken);
+			if(!decoded){
+				responseJSON.status = "error";
+				responseJSON.error = "You must be logged in to like this post";
+				res.status(500).send(responseJSON);
+				return;
+			}
+			likeJSON.originUsername = decoded.username;
+		}catch(err){
+			responseJSON.status = "error";
+			responseJSON.error = "You must be logged in to like this post.";
+			res.status(500).send(responseJSON);
+			return;
+		}
+	}	
+	request.post({
+		headers: {'content-type': 'application/json'},
+		url:  "http://192.168.122.16:3000/item/:id/like",
+		body: JSON.stringify(likeJSON)
+	}, function (err, response, body){
+		body = JSON.parse(body);
+		if(body.status === "error"){
+			res.status(500).send(body);
+			return;
+		}else{
+			var newToken = jwt.sign({username:likeJSON.originUsername},secretToken,{expiresIn: 86400});
+			res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
+			responseJSON.status = "OK";
+			res.status(200).send(body);
+		}
+	});
+});
+
 
 //FRONT END GOES DOWN HERE
 router.get("/",function(req,res){

@@ -206,7 +206,90 @@ router.post("/search",urlencodedParser, async function(req,res){
 	});
 });
 
-router.get("/item/:id",function(req,res){
+router.post("/item/:id/like", urlencodedParser, function(req,res){
+	var responseJSON = {};
+	var originUsername = req.body.originUsername;//user that is following/unfollowing
+	var direction = req.body.direction; //following or unfollowing
+	var targetId = req.params.id;
+	console.log(originUsername);
+	console.log(direction);
+	console.log(targetId);
+	if(!targetId || direction == undefined){
+		responseJSON.status = "error";
+		responseJSON.error = "Need id to like.";
+		res.status(500).send(responseJSON);
+		db.close();
+		return;
+	}
+	if(!originUsername){
+		responseJSON.status = "error";
+		responseJSON.error = "Error while processing the username.";
+		res.status(500).send(responseJSON);
+		db.close();
+		return;
+	}
+	MongoClient.connect(url, async function(err, db) {
+  		if (err) throw err;
+  		var dbo = db.db("faketwitter");//IMPORTANT: this should be a separate db from the users
+  		var result = await dbo.collection("items").find({ id: targetId}).toArray();
+		if(!result || result.length == 0){
+			responseJSON.status = "error";
+			responseJSON.error = "No such user to follow.";
+			res.status(500).send(responseJSON);
+			db.close();
+			return;
+		}
+		var userLikeArray = result[0].usersWhoLiked;
+		var numOfLikes = result[0].property.likes;
+		if(direction){
+			if(!userLikeArray.includes(originUsername)){
+				dbo.collection("items").updateOne({id:targetId}, {$push:{usersWhoLiked:originUsername}, $inc:{"property.likes":1}},function(err, response) {
+					if (err) throw err;
+					if(err){
+						responseJSON.status = "error";
+						responseJSON.error = "Error updating target users.";
+						res.status(500).send(responseJSON);
+						db.close();
+						return;
+					}
+					else{
+						responseJSON.status = "OK";
+						res.status(200).send(responseJSON);
+					}
+				});
+			}
+			else{
+				responseJSON.status = "OK";
+				res.status(200).send(responseJSON);
+			}
+		}
+		else{
+			if(userLikeArray.includes(originUsername)){
+				dbo.collection("items").updateOne({id:targetId}, {$pull:{usersWhoLiked:originUsername}, $inc:{"property.likes":-1}}, function(err, response) {
+					if (err) throw err;
+					if(err){
+						responseJSON.status = "error";
+						responseJSON.error = "Error updating target users.";
+						res.status(500).send(responseJSON);
+						db.close();
+						return;
+					}
+					else{
+						responseJSON.status = "OK";
+						res.status(200).send(responseJSON);
+						db.close();
+					}
+				});
+			}
+			else{
+				responseJSON.status = "OK";
+				res.status(200).send(responseJSON);
+			}
+		}
+	});
+});
+
+router.get("/item/:id", function(req,res){
 	var responseJSON = {};
 	var responseItem = {};
 	var requestedId = req.params.id;
