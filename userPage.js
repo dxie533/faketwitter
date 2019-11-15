@@ -123,6 +123,64 @@ function follow(){
 	request.send(JSON.stringify(followJSON));
 }
 
+function like(){
+	var content = document.getElementById("likeField").value;
+	var likeJSON = {};
+	
+	if(content == ""){
+		document.getElementById("likeResult").innerHTML = "No item id entered to like!";
+	}
+	likeJSON.like = true;
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+					document.getElementById("likeResult").innerHTML = results.error;
+					return;
+			}
+				
+			
+			if(results.status === "OK"){
+				document.getElementById("likeResult").innerHTML = "You liked " + content +  "!";
+				return;
+			}
+		}
+	}
+	request.open("POST", "/item/" + content + "/like",true);
+		request.setRequestHeader("Content-Type","application/json");
+	request.send(JSON.stringify(likeJSON));
+}
+
+function unlike(){
+	var content = document.getElementById("unlikeField").value;
+	var unlikeJSON = {};
+	
+	if(content == ""){
+		document.getElementById("unlikeResult").innerHTML = "No item id entered to unlike!";
+	}
+	unlikeJSON.like = false;
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function(){
+		if(this.readyState == 4 && this.status == 200||this.readyState == 4 && this.status == 500){
+			var results = JSON.parse(request.responseText);
+			if(results.status === "error"){
+					document.getElementById("unlikeResult").innerHTML = results.error;
+					return;
+			}
+				
+			
+			if(results.status === "OK"){
+				document.getElementById("unlikeResult").innerHTML = "You unliked post " + content +  "!";
+				return;
+			}
+		}
+	}
+	request.open("POST", "/item/" + content + "/like",true);
+		request.setRequestHeader("Content-Type","application/json");
+	request.send(JSON.stringify(unlikeJSON));
+}
+
 function unfollow(){
 	var content = document.getElementById("unfollowField").value;
 	var followJSON = {};
