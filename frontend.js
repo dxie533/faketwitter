@@ -498,6 +498,7 @@ router.post("/item/:id/like",async function(req,res){
 	var responseJSON = {};
 	var likeJSON = {};
 	var like = req.body.like;
+	var id = req.params.id;
 	
 	if(like == undefined){
 		like = true;
@@ -529,7 +530,7 @@ router.post("/item/:id/like",async function(req,res){
 	}	
 	request.post({
 		headers: {'content-type': 'application/json'},
-		url:  "http://192.168.122.16:3000/item/:id/like",
+		url:  "http://192.168.122.16:3000/item/"+id+"/like",
 		body: JSON.stringify(likeJSON)
 	}, function (err, response, body){
 		body = JSON.parse(body);
@@ -537,8 +538,6 @@ router.post("/item/:id/like",async function(req,res){
 			res.status(500).send(body);
 			return;
 		}else{
-			var newToken = jwt.sign({username:likeJSON.originUsername},secretToken,{expiresIn: 86400});
-			res.cookie('token', newToken, {maxAge: 86400*1000, overwrite: true});
 			responseJSON.status = "OK";
 			res.status(200).send(body);
 		}
