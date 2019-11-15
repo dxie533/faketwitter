@@ -211,9 +211,6 @@ router.post("/item/:id/like", urlencodedParser, function(req,res){
 	var originUsername = req.body.originUsername;//user that is following/unfollowing
 	var direction = req.body.direction; //following or unfollowing
 	var targetId = req.params.id;
-	console.log(originUsername);
-	console.log(direction);
-	console.log(targetId);
 	if(!targetId || direction == undefined){
 		responseJSON.status = "error";
 		responseJSON.error = "Need id to like.";
