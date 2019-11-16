@@ -21,7 +21,7 @@ function search(){
 	if(searchQuery != ""){
 		searchObject.q = searchQuery;
 	}
-	if(parentId.length != 0){
+	if(parentId != ""){
 		searchObject.parent = parentId;
 	}
 	if(reples != undefined){
