@@ -65,7 +65,12 @@ router.post("/additem",urlencodedParser,function(req,res){
 								db.close();
 								return;
 							}
-							newEntry.parent = result[0].parent;
+							if(result[0].parent == null){
+								newEntry.parent = parentId;
+							}
+							else{
+								newEntry.parent = result[0].parent;
+							}
 							newEntry.content = result[0].content;
 							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}, $inc:{"interest":1}},function(err, response) {
 								if (err) throw err;
@@ -90,7 +95,12 @@ router.post("/additem",urlencodedParser,function(req,res){
 									db.close();
 									return;
 								}
-								newEntry.parent = result[0].parent;
+								if(result[0].parent == null){
+									newEntry.parent = parentId;
+								}
+								else{
+									newEntry.parent = result[0].parent;
+								}
 							}
 						}
 					}
