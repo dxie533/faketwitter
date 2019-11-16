@@ -95,12 +95,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 									db.close();
 									return;
 								}
-								if(result[0].parent == null){
-									newEntry.parent = parentId;
-								}
-								else{
-									newEntry.parent = result[0].parent;
-								}
+								newEntry.parent = parentId;
 							}
 						}
 					}
