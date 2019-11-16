@@ -5,7 +5,7 @@ function search(){
 	var searchQuery = document.getElementById("searchQuery").value;
 	var followersOnly = document.getElementById("followersOnly");
 	var usernameQuery = document.getElementById("usernameOnly").value;
-	var parentId = document.getElementById("parentIdSearch");
+	var parentId = document.getElementById("parentIdSearch").value;
 	var reples = document.getElementById("repliesBox");
 	var media = document.getElementById("mediaBox");
 	var timeStatus = document.getElementById("radioTime");
