@@ -249,6 +249,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 	}
 	if(!repliesFilter){
 		console.log("replied happened");
+		searchJSON.childType = {};
 		searchJSON.childType.$ne = "reply";
 	}
 	searchJSON.timestamp = {$lte:timestamp};
