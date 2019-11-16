@@ -248,10 +248,12 @@ router.post("/search",urlencodedParser, async function(req,res){
 		searchJSON.parent = parentFilter;
 	}
 	if(!repliesFilter){
-		console.log("replied happened");
-		console.log(repliesFilter);
 		searchJSON.childType = {};
 		searchJSON.childType.$ne = "reply";
+	}
+	if(mediaFilter){
+		searchJSON.media = {};
+		searchJSON.media.$ne = [];
 	}
 	searchJSON.timestamp = {$lte:timestamp};
 	MongoClient.connect(url,function(err,db){
@@ -265,11 +267,9 @@ router.post("/search",urlencodedParser, async function(req,res){
 		var sortOption = {};
 		if(rankOrder == "interest"){// NOW IT IS JUST SORTING BY LIKES, INSERT INTEREST FIELD HERE WHEN WE GOT IT
 			sortOption.retweeted = -1;
-			console.log("interest");
 		}
 		else{
 			sortOption.timestamp = -1;
-			console.log("time");
 		}
 		dbo.collection("items").find(searchJSON).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,result){
 			if(err){
