@@ -10,8 +10,10 @@ function addItem(parentID,type){
 	if(types[i].checked)
        selectedType = types[i].value;
 	}
-	
+	console.log(selectedType);
+	console.log(parentID);
 	if(typeof selectedType !== 'undefined' && parentID.length != 0){
+		console.log("happened");
 		itemObject.selectedType = selectedType;
 		itemObject.parent = parentID;
 	}
