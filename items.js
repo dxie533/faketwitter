@@ -67,7 +67,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							}
 							newEntry.parent = result[0].parent;
 							newEntry.content = result[0].content;
-							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}, {$inc:{"interest":1}},function(err, response) {
+							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}, $inc:{"interest":1}},function(err, response) {
 								if (err) throw err;
 								if(err){
 									responseJSON.status = "error";
@@ -264,7 +264,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 		var dbo = db.db("faketwitter");
 		var sortOption = {};
 		if(rankOrder == "interest"){// NOW IT IS JUST SORTING BY LIKES, INSERT INTEREST FIELD HERE WHEN WE GOT IT
-			sortOption.retweeted = -1;
+			sortOption.interest = -1;
 		}
 		else{
 			sortOption.timestamp = -1;
@@ -435,7 +435,7 @@ router.delete("/item/:id",function(req,res){
 				var parentID;
 				if(result[0].parent != null && result[0].childType == "retweet"){
 					parentID = result[0].parent;
-					dbo.collection("items").updateOne({id:parentID},{$inc:{retweeted:-1}}, {$inc:{interest:-1})
+					dbo.collection("items").updateOne({id:parentID},{$inc:{retweeted:-1}, $inc:{interest:-1}})
 				}
 				dbo.collection("items").deleteOne({username:username, id:requestedId},function(err,result){
 					if(err) throw err;
