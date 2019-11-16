@@ -249,6 +249,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 	}
 	if(!repliesFilter){
 		console.log("replied happened");
+		console.log(repliesFilter);
 		searchJSON.childType = {};
 		searchJSON.childType.$ne = "reply";
 	}
