@@ -5,6 +5,11 @@ function search(){
 	var searchQuery = document.getElementById("searchQuery").value;
 	var followersOnly = document.getElementById("followersOnly");
 	var usernameQuery = document.getElementById("usernameOnly").value;
+	var parentId = document.getElementById("parentIdSearch");
+	var reples = document.getElementById("repliesBox");
+	var media = document.getElementById("mediaBox");
+	var timeStatus = document.getElementById("radioTime");
+	var interestStatus = document.getElementById("radioInterest");
 	if(followersOnly != undefined){
 		searchObject.following = followersOnly.checked;
 	}
@@ -15,6 +20,21 @@ function search(){
 		searchObject.limit = parseInt(document.getElementById("count").value,10);
 	if(searchQuery != ""){
 		searchObject.q = searchQuery;
+	}
+	if(parentId.length != 0){
+		searchObject.parent = parentId;
+	}
+	if(reples != undefined){
+		searchObject.replies = reples.checked;
+	}
+	if(media != undefined){
+		searchObject.hasMedia = media.checked;
+	}
+	if(timeStatus.checked == true){
+		searchObject.rank = "time";
+	}
+	if(interestStatus.checked == true){
+		searchObject.rank = "interest";
 	}
 	if(usernameQuery != ""){
 		searchObject.username = usernameQuery;
