@@ -3,18 +3,20 @@ function addItem(){
 	var parentID = document.getElementById("replyPost").value;
 	var content= document.getElementById("content").value;
 	var media = document.getElementById("mediaSelection");
-	var types = document.getElementsByName('re');
+	var retweetStatus = getElementById("radioRetweet");
+	var replyStatus = getElementById("radioReply");
 	var selectedType;
 	
-	for(var i = 0; i < types.length; i++) {
-	if(types[i].checked)
-       selectedType = types[i].value;
+	if(retweetStatus.checked == true){
+		selectedType = "retweet";
 	}
-	console.log(selectedType);
-	console.log(parentID);
+	
+	if(replyStatus.checked == true){
+		selectedType = "reply";
+	}
+
 	if(typeof selectedType !== 'undefined' && parentID.length != 0){
-		console.log("happened");
-		itemObject.selectedType = selectedType;
+		itemObject.childType = selectedType;
 		itemObject.parent = parentID;
 	}
 	var selectedMedia = getSelectedMedia(media);
