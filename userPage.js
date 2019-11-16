@@ -11,16 +11,14 @@ function addItem(parentID,type){
        selectedType = types[i].value;
 	}
 	
-	if(typeof selectedType !== 'undefined'){
+	if(typeof selectedType !== 'undefined' && parentID.length != 0){
 		itemObject.selectedType = selectedType;
-	}
-	var selectedMedia = getSelectedMedia(media);
-	if(parentID.length != 0){
 		itemObject.parent = parentID;
 	}
-	if(type){
+	var selectedMedia = getSelectedMedia(media);
+	/*if(type){
 		itemObject.childType = type;
-	}
+	}*/
 	if(content == ""){
 		document.getElementById("addResult").innerHTML = "There is no content to add.";
 		return;
