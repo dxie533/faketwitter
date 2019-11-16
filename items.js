@@ -46,6 +46,17 @@ router.post("/additem",urlencodedParser,function(req,res){
 				var newEntry = {};
 					newEntry.username = username;
 					newEntry.id = crypto.randomBytes(32).toString('hex');
+					if(req.body.parent){
+						var result = await dbo.collection("items").find({ id: req.body.parent}).toArray();
+						if(!result || result.length == 0){
+							responseJSON.status = "error";
+							responseJSON.error = "No such parent.";
+							res.status(500).send(responseJSON);
+							db.close();
+							return;
+						}
+						newEntry.parent = req.body.parent;
+					}
 					if(childType){//perform checking of what type and what actions to take ### hello david you might need to async the db query since we have to grab the content of the parent first otherwise it might add it to the db before we grabbed hte parent content and you might also have to move all the stuff into a separate if else statement so we avoid the above (similar to what i did for media)
 						newEntry.childType = childType;
 					}

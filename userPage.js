@@ -1,9 +1,10 @@
 function addItem(parentID,type){
 	var itemObject = {};
+	var parentID = document.getElementById("replyPost").value;
 	var content= document.getElementById("content").value;
 	var media = document.getElementById("mediaSelection");
 	var selectedMedia = getSelectedMedia(media);
-	if(parentID){
+	if(parentID.length != 0){
 		itemObject.parent = parentID;
 	}
 	if(type){
