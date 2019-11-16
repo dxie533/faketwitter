@@ -20,7 +20,19 @@ function addItem(){
 		itemObject.parent = parentID;
 	}
 	else{
-		itemObject.childType = null;
+		if(typeof selectedType !== 'undefined' && parentID.length == 0){
+			document.getElementById("addResult").innerHTML = "Need to specify a post.";
+			return;
+		}
+		else{
+			if(typeof selectedType == 'undefined' && parentID.length != 0){
+				document.getElementById("addResult").innerHTML = "Need to specify retweet or reply.";
+				return;
+			}
+			else{
+				itemObject.childType = null;
+			}
+		}
 	}
 	var selectedMedia = getSelectedMedia(media);
 	/*if(type){
