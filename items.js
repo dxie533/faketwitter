@@ -192,6 +192,18 @@ router.post("/search",urlencodedParser, async function(req,res){
 	if(followingFilter == undefined){
 		followingFilter = true;
 	}
+	if(rankOrder == undefined){
+		rankOrder = "interest";
+	}
+	if(parentFilter == undefined || repliesFilter == false){
+		parentFilter = "none";
+	}
+	if(repliesFilter == undefined){
+		repliesFilter = true;
+	}
+	if(mediaFilter == undefined){
+		mediaFilter = false;
+	}
 	if(token && followingFilter){
 		try{
 			var decoded = await jwt.verify(token,secretToken);
@@ -242,7 +254,14 @@ router.post("/search",urlencodedParser, async function(req,res){
 		}
 		var dbo = db.db("faketwitter");
 		var sortOption = {};
-		sortOption.timestamp = -1;
+		if(rankOrder == "interest"){// NOW IT IS JUST SORTING BY LIKES, INSERT INTEREST FIELD HERE WHEN WE GOT IT
+			sortOption.property.likes = -1;
+			console.log("interest");
+		}
+		else{
+			sortOption.timestamp = -1;
+			console.log("time");
+		}
 		dbo.collection("items").find(searchJSON).project({_id: 0 }).limit(limit).sort(sortOption).toArray(function(err,result){
 			if(err){
 					responseJSON.status = "error";
