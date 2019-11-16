@@ -244,6 +244,10 @@ router.post("/search",urlencodedParser, async function(req,res){
 			searchJSON.username = {};
 		searchJSON.username.$eq = usernameQuery;
 	}
+	if(parentFilter != "none"){
+		console.log("parent");
+		searchJSON.parent = parentFilter;
+	}
 	searchJSON.timestamp = {$lte:timestamp};
 	MongoClient.connect(url,function(err,db){
 		if(err){
