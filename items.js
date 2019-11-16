@@ -43,6 +43,8 @@ router.post("/additem",urlencodedParser,function(req,res){
 					return;
 				}
 				var dbo = db.db("faketwitter");
+				console.log(childType);
+				console.log(req.body.parent);
 				var newEntry = {};
 					newEntry.username = username;
 					newEntry.id = crypto.randomBytes(32).toString('hex');
