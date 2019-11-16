@@ -140,7 +140,9 @@ router.post("/additem",urlencodedParser,function(req,res){
 						newEntry.property = {};
 						newEntry.property.likes = 0;
 						newEntry.retweeted = 0;
-						newEntry.content = itemContent;
+						if(!newEntry.content){
+							newEntry.content = itemContent;
+						}
 						newEntry.usersWhoLiked = [];
 						newEntry.media = [];
 						newEntry.timestamp = Math.floor(Date.now()/1000);
