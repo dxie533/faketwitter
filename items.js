@@ -43,8 +43,6 @@ router.post("/additem",urlencodedParser,function(req,res){
 					return;
 				}
 				var dbo = db.db("faketwitter");
-				console.log(childType);
-				console.log(req.body.parent);
 				var newEntry = {};
 					newEntry.username = username;
 					newEntry.id = crypto.randomBytes(32).toString('hex');
@@ -180,6 +178,14 @@ router.post("/search",urlencodedParser, async function(req,res){
 	var searchQuery = req.body.q;
 	var usernameQuery = req.body.username;
 	var followingFilter = req.body.following;
+	var rankOrder = req.body.rank;
+	var parentFilter = req.body.parent;
+	var repliesFilter = req.body.replies;
+	var mediaFilter = req.body.hasMedia;
+	console.log(rankOrder);
+	console.log(parentFilter);
+	console.log(repliesFilter);
+	console.log(mediaFilter);
 	var searchJSON = {};
 	var responseJSON = {};
 	var token = (req.cookies && req.cookies.token);

@@ -10,6 +10,7 @@ function search(){
 	var media = document.getElementById("mediaBox");
 	var timeStatus = document.getElementById("radioTime");
 	var interestStatus = document.getElementById("radioInterest");
+	var noRankStatus = document.getElementById("radioNoRank");
 	if(followersOnly != undefined){
 		searchObject.following = followersOnly.checked;
 	}
