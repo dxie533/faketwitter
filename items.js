@@ -182,10 +182,10 @@ router.post("/search",urlencodedParser, async function(req,res){
 	var parentFilter = req.body.parent;
 	var repliesFilter = req.body.replies;
 	var mediaFilter = req.body.hasMedia;
-	console.log(rankOrder);
-	console.log(parentFilter);
-	console.log(repliesFilter);
-	console.log(mediaFilter);
+	console.log("rank: " + rankOrder);
+	console.log("parent: " + parentFilter);
+	console.log("reply: " + repliesFilter);
+	console.log("media: " + mediaFilter);
 	var searchJSON = {};
 	var responseJSON = {};
 	var token = (req.cookies && req.cookies.token);
@@ -246,6 +246,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 	}
 	if(parentFilter != "none"){
 		console.log("parent");
+		console.log("parent filter: " + parentFilter);
 		searchJSON.parent = parentFilter;
 	}
 	searchJSON.timestamp = {$lte:timestamp};
