@@ -270,6 +270,7 @@ router.post("/search",urlencodedParser, async function(req,res){
 		var sortOption = {};
 		if(rankOrder == "interest"){// NOW IT IS JUST SORTING BY LIKES, INSERT INTEREST FIELD HERE WHEN WE GOT IT
 			sortOption.interest = -1;
+			sortOption.timestamp = -1;
 		}
 		else{
 			sortOption.timestamp = -1;
