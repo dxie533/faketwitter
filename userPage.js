@@ -3,6 +3,17 @@ function addItem(parentID,type){
 	var parentID = document.getElementById("replyPost").value;
 	var content= document.getElementById("content").value;
 	var media = document.getElementById("mediaSelection");
+	var types = document.getElementsByName('re');
+	var selectedType;
+	
+	for(var i = 0; i < types.length; i++) {
+	if(types[i].checked)
+       selectedType = types[i].value;
+	}
+	
+	if(typeof selectedType !== 'undefined'){
+		itemObject.selectedType = selectedType;
+	}
 	var selectedMedia = getSelectedMedia(media);
 	if(parentID.length != 0){
 		itemObject.parent = parentID;
