@@ -3,8 +3,8 @@ function addItem(){
 	var parentID = document.getElementById("replyPost").value;
 	var content= document.getElementById("content").value;
 	var media = document.getElementById("mediaSelection");
-	var retweetStatus = getElementById("radioRetweet");
-	var replyStatus = getElementById("radioReply");
+	var retweetStatus = document.getElementById("radioRetweet");
+	var replyStatus = document.getElementById("radioReply");
 	var selectedType;
 	
 	if(retweetStatus.checked == true){
