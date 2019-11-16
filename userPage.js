@@ -1,4 +1,4 @@
-function addItem(parentID,type){
+function addItem(){
 	var itemObject = {};
 	var parentID = document.getElementById("replyPost").value;
 	var content= document.getElementById("content").value;
