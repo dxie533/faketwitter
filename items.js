@@ -46,19 +46,46 @@ router.post("/additem",urlencodedParser,function(req,res){
 				var newEntry = {};
 					newEntry.username = username;
 					newEntry.id = crypto.randomBytes(32).toString('hex');
-					if(req.body.parent){
-						var result = await dbo.collection("items").find({ id: req.body.parent}).toArray();
-						if(!result || result.length == 0){
-							responseJSON.status = "error";
-							responseJSON.error = "No such parent.";
-							res.status(500).send(responseJSON);
-							db.close();
-							return;
-						}
-						newEntry.parent = req.body.parent;
-					}
 					if(childType){//perform checking of what type and what actions to take ### hello david you might need to async the db query since we have to grab the content of the parent first otherwise it might add it to the db before we grabbed hte parent content and you might also have to move all the stuff into a separate if else statement so we avoid the above (similar to what i did for media)
 						newEntry.childType = childType;
+						if(childType == "retweet" && req.body.parent){
+							var parentId = req.body.parent;
+							var result = await dbo.collection("items").find({$or:[{id:parentId},{parent:parentId,username:username}]}).toArray();
+							if(!result || result.length == 0){
+								responseJSON.status = "error";
+								responseJSON.error = "No such parent.";
+								res.status(500).send(responseJSON);
+								db.close();
+								return;
+							}
+							newEntry.parent = parentId;
+							newEntry.content = result[0].content;
+							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}},function(err, response) {
+								if (err) throw err;
+								if(err){
+									responseJSON.status = "error";
+									responseJSON.error = "Error updating parent.";
+									res.status(500).send(responseJSON);
+									db.close();
+									return;
+								}
+							});
+						}
+						else{
+							//childtype is reply
+							if(childType == "reply" && req.body.parent){
+								var parentId = req.body.parent;
+								var result = await dbo.collection("items").find({$or:[{id:parentId},{parent:parentId,username:username}]}).toArray();
+								if(!result || result.length == 0){
+									responseJSON.status = "error";
+									responseJSON.error = "No such parent.";
+									res.status(500).send(responseJSON);
+									db.close();
+									return;
+								}
+								newEntry.parent = parentId;
+							}
+						}
 					}
 					else{
 						newEntry.childType = null;
