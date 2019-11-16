@@ -19,6 +19,9 @@ function addItem(){
 		itemObject.childType = selectedType;
 		itemObject.parent = parentID;
 	}
+	else{
+		itemObject.childType = null;
+	}
 	var selectedMedia = getSelectedMedia(media);
 	/*if(type){
 		itemObject.childType = type;

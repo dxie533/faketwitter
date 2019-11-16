@@ -50,6 +50,13 @@ router.post("/additem",urlencodedParser,function(req,res){
 					newEntry.id = crypto.randomBytes(32).toString('hex');
 					if(childType){//perform checking of what type and what actions to take ### hello david you might need to async the db query since we have to grab the content of the parent first otherwise it might add it to the db before we grabbed hte parent content and you might also have to move all the stuff into a separate if else statement so we avoid the above (similar to what i did for media)
 						newEntry.childType = childType;
+						if(!req.body.parent){
+							responseJSON.status = "error";
+							responseJSON.error = "No Parent specified.";
+							res.status(500).send(responseJSON);
+							db.close();
+							return;
+						}
 						if(childType == "retweet" && req.body.parent){
 							var parentId = req.body.parent;
 							var result = await dbo.collection("items").find({$or:[{id:parentId},{parent:parentId,username:username}]}).toArray();
