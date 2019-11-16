@@ -65,9 +65,9 @@ router.post("/additem",urlencodedParser,function(req,res){
 								db.close();
 								return;
 							}
-							newEntry.parent = parentId;
+							newEntry.parent = result[0].parent;
 							newEntry.content = result[0].content;
-							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}},function(err, response) {
+							dbo.collection("items").updateOne({id:parentId}, {$inc:{"retweeted":1}, {$inc:{"interest":1}},function(err, response) {
 								if (err) throw err;
 								if(err){
 									responseJSON.status = "error";
@@ -90,7 +90,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 									db.close();
 									return;
 								}
-								newEntry.parent = parentId;
+								newEntry.parent = result[0].parent;
 							}
 						}
 					}
@@ -111,6 +111,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							newEntry.property = {};
 							newEntry.property.likes = 0;
 							newEntry.retweeted = 0;
+							newEntry.interest = 0;
 							newEntry.content = itemContent;
 							newEntry.usersWhoLiked = [];
 							newEntry.media = media;
@@ -145,6 +146,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 						newEntry.property = {};
 						newEntry.property.likes = 0;
 						newEntry.retweeted = 0;
+						newEntry.interest = 0;
 						if(!newEntry.content){
 							newEntry.content = itemContent;
 						}
@@ -319,7 +321,7 @@ router.post("/item/:id/like", urlencodedParser, function(req,res){
 		var numOfLikes = result[0].property.likes;
 		if(direction){
 			if(!userLikeArray.includes(originUsername)){
-				dbo.collection("items").updateOne({id:targetId}, {$push:{usersWhoLiked:originUsername}, $inc:{"property.likes":1}},function(err, response) {
+				dbo.collection("items").updateOne({id:targetId}, {$push:{usersWhoLiked:originUsername}, $inc:{"property.likes":1}, $inc:{"interest":1}},function(err, response) {
 					if (err) throw err;
 					if(err){
 						responseJSON.status = "error";
@@ -341,7 +343,7 @@ router.post("/item/:id/like", urlencodedParser, function(req,res){
 		}
 		else{
 			if(userLikeArray.includes(originUsername)){
-				dbo.collection("items").updateOne({id:targetId}, {$pull:{usersWhoLiked:originUsername}, $inc:{"property.likes":-1}}, function(err, response) {
+				dbo.collection("items").updateOne({id:targetId}, {$pull:{usersWhoLiked:originUsername}, $inc:{"property.likes":-1}, $inc:{"interest":-1}}, function(err, response) {
 					if (err) throw err;
 					if(err){
 						responseJSON.status = "error";
@@ -433,7 +435,7 @@ router.delete("/item/:id",function(req,res){
 				var parentID;
 				if(result[0].parent != null && result[0].childType == "retweet"){
 					parentID = result[0].parent;
-					dbo.collection("items").updateOne({id:parentID},{$inc:{retweeted:-1}})
+					dbo.collection("items").updateOne({id:parentID},{$inc:{retweeted:-1}}, {$inc:{interest:-1})
 				}
 				dbo.collection("items").deleteOne({username:username, id:requestedId},function(err,result){
 					if(err) throw err;
