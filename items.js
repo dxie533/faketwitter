@@ -35,7 +35,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 		res.status(500).send(responseJSON);
 		return;
 	}
-			MongoClient.connect(url,function(err,db){
+			MongoClient.connect(url,async function(err,db){
 				if(err){
 					responseJSON.status = "error";
 					responseJSON.error = "Error connecting to database.";
