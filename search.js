@@ -54,7 +54,9 @@ function search(){
 				}
 				var response = "";
 				for(var i = 0; i < results.items.length; i++){
-					response += "<div>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br /><br/>";
+					
+					response += "<div id = '"+ results.items[i].id+ "'>"+typeString+"User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/>"+ "Associated Media:<br/>" + mediaString+"Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "</div><br/>";
+					/*response += "<div>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br /><br/>";*/
 				}
 				document.getElementById("searchResult").innerHTML = response;
 			}

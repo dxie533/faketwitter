@@ -582,7 +582,20 @@ router.post("/",function(req,res){
 						}else{
 							var generatedPostString = "";
 							for(var i = 0; i < results.items.length; i++){
-								generatedPostString += "<div id = '"+ results.items[i].id+ "'>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br/><button onclick = 'deletePost(\""+results.items[i].id+"\");'>Delete Post</button>"+"</div><br/>";
+								var typeString = "";
+								var mediaString = "";
+								if(results.items[i].childType === "retweet"){
+									typeString = "Retweet of post <a href = '/item/" + results.items[i].parent + "'>" + results.items[i].parent + "</a><br/>";
+								}
+								if(results.items[i].childType === "reply"){
+									typeString = "Reply to post <a href = '/item/" + results.items[i].parent + "'>" + results.items[i].parent + "</a><br/>";
+								}
+								if(results.items[i].media.length > 0){
+									for(var j = 0; j < media.length; j++){
+										mediaString += "<a href = '/media/'" + results.items[i].media[i] + "'>" + results.items[i].media[i] + "</a><br/>";
+									}
+								}
+								generatedPostString += "<div id = '"+ results.items[i].id+ "'>"+typeString+"User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/>"+ "Associated Media:<br/>" + mediaString+"Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br/><button onclick = 'deletePost(\""+results.items[i].id+"\");'>Delete Post</button>"+"</div><br/>";
 							}
 							var returnString = "<html><head><script src = '/userPage.js'></script></head><body><a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/'>Home</a> <a href = 'http://helloworld123.cse356.compas.cs.stonybrook.edu/searchpage'>Search for posts</a> <button onclick = 'logout()'>Log out</button><br/>Upload media for use<form action = '/addmedia' method = 'POST' enctype='multipart/form-data'><input type = 'file' name = 'content'></input><input type = 'submit'></input></form><br/><br/>Add a new post:<input type = 'text' id = 'content' width = '200px' height = '200px'></input><br/>Add media to post:<br/><select id = 'mediaSelection' multiple></select><br/><br/><input id = 'radioRetweet' type = 'radio' name = 'radiotype' value = 'retweet'>Retweet<br/><input id = 'radioReply' type = 'radio' name = 'radiotype' value = 'reply'>Reply<br/></input>Id of parent post:<input type = 'text' id = 'replyPost' width = '200px' height = '200px'><br/><button onclick = 'addItem()'>Add post</button><br/>Delete specific item with id:<input type = 'text' id = 'deleteContent'></input><button onclick = 'deleteSelected()'>Delete Item</button><br/><div>Follow a specific user:<input type='text' id = 'followField'></input><button onclick = 'follow()'>Follow</button></div><br/><div>Unfollow a specific user:<input type='text' id = 'unfollowField'></input><button onclick = 'unfollow()'>Unfollow</button></div> <div id = 'addResult'></div><br/><div id = 'deleteResult'></div><br/><div>Like a specific post:<input type='text' id = 'likeField'></input><button onclick = 'like()'>Like</button><div id = 'likeResult'></div><br/><div>Unlike a specific post:<input type='text' id = 'unlikeField'></input><button onclick = 'unlike()'>Unlike</button><div id = 'unlikeResult'></div><h1>Your 100 latest posts</h1><div id = 'useritems'>"+generatedPostString+"</div></body><script>updateAvailableMedia()</script></html>";
 							res.status(200).send(returnString);
