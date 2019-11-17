@@ -54,7 +54,19 @@ function search(){
 				}
 				var response = "";
 				for(var i = 0; i < results.items.length; i++){
-					
+					var typeString = "";
+					var mediaString = "";
+					if(results.items[i].childType === "retweet"){
+						typeString = "Retweet of post <a href = '/item/" + results.items[i].parent + "'>" + results.items[i].parent + "</a><br/>";
+					}
+					if(results.items[i].childType === "reply"){
+						typeString = "Reply to post <a href = '/item/" + results.items[i].parent + "'>" + results.items[i].parent + "</a><br/>";
+					}
+					if(results.items[i].media.length > 0){
+						for(var j = 0; j < media.length; j++){
+							mediaString += "<a href = '/media/'" + results.items[i].media[i] + "'>" + results.items[i].media[i] + "</a><br/>";
+						}
+					}
 					response += "<div id = '"+ results.items[i].id+ "'>"+typeString+"User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/>"+ "Associated Media:<br/>" + mediaString+"Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "</div><br/>";
 					/*response += "<div>User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/> Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "<br /><br/>";*/
 				}
