@@ -64,7 +64,7 @@ function search(){
 					}
 					if(results.items[i].media.length > 0){
 						for(var j = 0; j < results.items[i].media.length; j++){
-							mediaString += "<a href = '/media/'" + results.items[i].media[j] + "'>" + results.items[i].media[j] + "</a><br/>";
+							mediaString += "<a href = '/media/" + results.items[i].media[j] + "'>" + results.items[i].media[j] + "</a><br/>";
 						}
 					}
 					response += "<div id = '"+ results.items[i].id+ "'>"+typeString+"User:" + results.items[i].username + "<br/>" + results.items[i].content + "<br/>"+ "Associated Media:<br/>" + mediaString+"Likes:" + results.items[i].property.likes + " Retweets:" + results.items[i].retweeted + "<br/> Posted on (UNIX Time): " + results.items[i].timestamp + "</div><br/>";
