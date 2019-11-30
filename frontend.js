@@ -42,7 +42,7 @@ router.post("/login", urlencodedParser, async function(req,res){
 	if(!username || !password){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing password or username field.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.post({
@@ -91,7 +91,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	if(!user || !password || !email){
 		returnJSON.status = "error";
 		returnJSON.error = "Username, password, or email field is missing.";
-		res.status(500).send(returnJSON);
+		res.status(400).send(returnJSON);
 		return;
 	}
 	request.post({
@@ -118,7 +118,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 	if(!email || !key){
 		responseJSON.status = "error";
 		responseJSON.error = "No email or key provided.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.post({
@@ -149,7 +149,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 			responseJSON.error = "User not logged in.";
 		if(!itemContent)
 			responseJSON.error = "Content of item is missing.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	if(childType){
@@ -159,7 +159,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				responseJSON.error = "error";
 			if(!itemContent)
 				responseJSON.error = "Invalid child type.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			return;
 		}
 	}
@@ -168,7 +168,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 			if(!decoded){
 				responseJSON.status = "error";
 				responseJSON.error = "Session has expired. Please log in again.";
-				res.status(500).send(responseJSON);
+				res.status(400).send(responseJSON);
 				return;
 			}
 			req.body.username = decoded.username;
@@ -231,7 +231,7 @@ router.get("/item/:id", urlencodedParser,function(req,res){
 	if(!id){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing item ID to get.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.get({
@@ -255,7 +255,7 @@ router.get("/user/:username", urlencodedParser,function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing username to get.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.get({
@@ -279,7 +279,7 @@ router.get("/user/:username/posts", urlencodedParser,function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing username to get.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.get({
@@ -303,7 +303,7 @@ router.get("/user/:username/followers", urlencodedParser,function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing username to get.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.get({
@@ -327,7 +327,7 @@ router.get("/user/:username/following", urlencodedParser,function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing username to get.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	request.get({
@@ -353,13 +353,13 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 	if(!id){
 		responseJSON.status = "error";
 		responseJSON.error = "Missing item ID to delete.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	if(!token){
 		responseJSON.status = "error";
 		responseJSON.error = "You must be logged in to delete items.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	if(token){
@@ -368,14 +368,14 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 			if(!decoded){
 				responseJSON.status = "error";
 				responseJSON.error = "You must be logged in to delete items.";
-				res.status(500).send(responseJSON);
+				res.status(400).send(responseJSON);
 				return;
 			}
 			usernameJSON.username = decoded.username;
 		}catch(err){
 			responseJSON.status = "error";
 			responseJSON.error = "You must be logged in to delete items.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			return;
 		}
 	}
@@ -409,14 +409,14 @@ router.post("/follow",async function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "Username required to follow.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	followJSON.targetUsername = username;
 	if(!token){
 		responseJSON.status = "error";
 		responseJSON.error = "You must be logged in to follow this user.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	var followingArray;
@@ -426,7 +426,7 @@ router.post("/follow",async function(req,res){
 			if(!decoded){
 				responseJSON.status = "error";
 				responseJSON.error = "You must be logged in to follow this user";
-				res.status(500).send(responseJSON);
+				res.status(400).send(responseJSON);
 				return;
 			}
 			followJSON.originUsername = decoded.username;
@@ -434,7 +434,7 @@ router.post("/follow",async function(req,res){
 		}catch(err){
 			responseJSON.status = "error";
 			responseJSON.error = "You must be logged in to follow this user.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			return;
 		}
 	}	
@@ -508,7 +508,7 @@ router.post("/item/:id/like",async function(req,res){
 	if(!token){
 		responseJSON.status = "error";
 		responseJSON.error = "You must be logged in to like this post.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	if(token){
@@ -517,14 +517,14 @@ router.post("/item/:id/like",async function(req,res){
 			if(!decoded){
 				responseJSON.status = "error";
 				responseJSON.error = "You must be logged in to like this post";
-				res.status(500).send(responseJSON);
+				res.status(400).send(responseJSON);
 				return;
 			}
 			likeJSON.originUsername = decoded.username;
 		}catch(err){
 			responseJSON.status = "error";
 			responseJSON.error = "You must be logged in to like this post.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			return;
 		}
 	}	
