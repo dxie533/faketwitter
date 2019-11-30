@@ -357,7 +357,7 @@ router.get("/user/:username",function(req,res){
 				if(!result || result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "User has no info";
-					res.status(500).send(responseJSON);
+					res.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
