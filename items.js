@@ -503,10 +503,10 @@ router.get("/user/:username/posts",function(req,res){
 					db.close(); 
 					return;
 				}
-				if(!result | result.length == 0){
-					responseJSON.status = "error";
-					responseJSON.error = "User has no posts";
-					res.status(500).send(responseJSON);
+				if(result.length == 0){
+					responseJSON.status = "OK";
+					responseJSON.items = [];
+					res.status(200).send(responseJSON);
 					db.close();
 					return;
 				}
