@@ -52,7 +52,7 @@ router.post("/login", urlencodedParser, async function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			var newToken = jwt.sign({username:username,following:body.following},secretToken,{expiresIn: 86400});
@@ -101,7 +101,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			returnJSON.status = "OK";
@@ -128,7 +128,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -179,7 +179,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 				}, function (err, response, body){
 					body = JSON.parse(body);
 					if(body.status === "error"){
-						res.status(500).send(body);
+						res.status(response.statusCode).send(body);
 						return;
 					}else{
 						responseJSON.status = "OK";
@@ -215,7 +215,7 @@ router.post("/search",urlencodedParser,function(req,res){
 	}, function (err, response, body){
 			body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -240,7 +240,7 @@ router.get("/item/:id", urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -264,7 +264,7 @@ router.get("/user/:username", urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -288,7 +288,7 @@ router.get("/user/:username/posts", urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -312,7 +312,7 @@ router.get("/user/:username/followers", urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -336,7 +336,7 @@ router.get("/user/:username/following", urlencodedParser,function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -386,7 +386,7 @@ router.delete("/item/:id", urlencodedParser,async function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";
@@ -454,7 +454,7 @@ router.post("/follow",async function(req,res){
 			}, function (err, response, body){
 				body = JSON.parse(body);
 				if(body.status === "error"){
-					res.status(500).send(body);
+					res.status(response.statusCode).send(body);
 					return;
 				}else{
 					var newToken = jwt.sign({username:followJSON.originUsername,following:followingArray},secretToken,{expiresIn: 86400});
@@ -476,7 +476,7 @@ router.post("/follow",async function(req,res){
 			}, function (err, response, body){
 				body = JSON.parse(body);
 				if(body.status === "error"){
-					res.status(500).send(body);
+					res.status(response.statusCode).send(body);
 					return;
 				}else{
 					var newToken = jwt.sign({username:followJSON.originUsername,following:followingArray},secretToken,{expiresIn: 86400});
@@ -535,7 +535,7 @@ router.post("/item/:id/like",async function(req,res){
 	}, function (err, response, body){
 		body = JSON.parse(body);
 		if(body.status === "error"){
-			res.status(500).send(body);
+			res.status(response.statusCode).send(body);
 			return;
 		}else{
 			responseJSON.status = "OK";

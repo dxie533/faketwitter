@@ -29,7 +29,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 	if(!user || !password || !email){
 		returnJSON.status = "error";
 		returnJSON.error = "Username, password, or email field is missing.";
-		res.status(500).send(returnJSON);
+		res.status(400).send(returnJSON);
 		return;
 	}
 	MongoClient.connect(url, async function(err, db) {
@@ -42,7 +42,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Username or email has already been taken and is pending verification.";
-					res.status(500).send(returnJSON);
+					res.status(400).send(returnJSON);
 					db.close();
 					return;
 			}
@@ -50,7 +50,7 @@ router.post("/adduser",urlencodedParser,function(req,res){
 			if(!result || result.length > 0){
 					returnJSON.status = "error";
 					returnJSON.error = "Username or email is already taken.";
-					res.status(500).send(returnJSON);
+					res.status(400).send(returnJSON);
 					db.close();
 					return;
 			}
@@ -108,7 +108,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 				if(result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "Provided email was not found in the database.";
-					responseObject.status(500).send(responseJSON);
+					responseObject.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -118,7 +118,7 @@ router.post("/verify",urlencodedParser, function(req, res){
 					responseJSON.error = "Verification key did not match.";
 					//console.log(unverifiedUser.key);
 					//console.log(key);
-					responseObject.status(500).send(responseJSON);
+					responseObject.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -177,7 +177,7 @@ router.post("/login", urlencodedParser, function(req,res){
 				if(result.length == 0 || result[0].password !== password){
 					responseJSON.status = "error";
 					responseJSON.error = "Invalid username or password";
-					res.status(500).send(responseJSON);
+					res.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -199,14 +199,14 @@ router.post("/follow",function(req,res){
 	if(!originUsername || !targetUsername || direction == undefined){
 		responseJSON.status = "error";
 		responseJSON.error = "Username required to follow.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		db.close();
 		return;
 	}
 	if(!following){
 		responseJSON.status = "error";
 		responseJSON.error = "Error while processing the following.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		db.close();
 		return;
 	}
@@ -217,7 +217,7 @@ router.post("/follow",function(req,res){
 		if(!result || result.length == 0){
 			responseJSON.status = "error";
 			responseJSON.error = "No such user to follow.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			db.close();
 			return;
 		}
@@ -318,7 +318,7 @@ router.post("/getfollowing",function(req,res){
 				if(result.length == 0 || result[0].password !== password){
 					responseJSON.status = "error";
 					responseJSON.error = "Invalid username or password";
-					res.status(500).send(responseJSON);
+					res.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -390,7 +390,7 @@ router.get("/user/:username/followers",function(req,res){
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
 		responseJSON.status = "error";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	MongoClient.connect(url, function(err, db) { 	
@@ -439,7 +439,7 @@ router.get("/user/:username/following",function(req,res){
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
 		responseJSON.status = "error";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	MongoClient.connect(url, function(err, db) { 	

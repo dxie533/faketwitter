@@ -32,7 +32,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 			responseJSON.error = "Username is missing.";
 		if(!itemContent)
 			responseJSON.error = "Content of item is missing.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 			MongoClient.connect(url,async function(err,db){
@@ -51,7 +51,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 						if(!req.body.parent){
 							responseJSON.status = "error";
 							responseJSON.error = "No Parent specified.";
-							res.status(500).send(responseJSON);
+							res.status(400).send(responseJSON);
 							db.close();
 							return;
 						}
@@ -61,7 +61,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							if(!result || result.length == 0){
 								responseJSON.status = "error";
 								responseJSON.error = "No such parent.";
-								res.status(500).send(responseJSON);
+								res.status(400).send(responseJSON);
 								db.close();
 								return;
 							}
@@ -91,7 +91,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 								if(!result || result.length == 0){
 									responseJSON.status = "error";
 									responseJSON.error = "No such parent.";
-									res.status(500).send(responseJSON);
+									res.status(400).send(responseJSON);
 									db.close();
 									return;
 								}
@@ -109,7 +109,7 @@ router.post("/additem",urlencodedParser,function(req,res){
 							if(queryResult.length != media.length){
 								responseJSON.status = "error";
 								responseJSON.error = "One or more media items do not belong to you or are already assigned to another post or simply do not exist.";
-								res.status(500).send(responseJSON);
+								res.status(400).send(responseJSON);
 								db.close();
 								return;
 							}
@@ -301,7 +301,7 @@ router.post("/item/:id/like", urlencodedParser, function(req,res){
 	if(!targetId || direction == undefined){
 		responseJSON.status = "error";
 		responseJSON.error = "Need id to like.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		db.close();
 		return;
 	}
@@ -319,7 +319,7 @@ router.post("/item/:id/like", urlencodedParser, function(req,res){
 		if(!result || result.length == 0){
 			responseJSON.status = "error";
 			responseJSON.error = "No such user to follow.";
-			res.status(500).send(responseJSON);
+			res.status(400).send(responseJSON);
 			db.close();
 			return;
 		}
@@ -393,7 +393,7 @@ router.get("/item/:id", function(req,res){
 				if(result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "No such item exists.";
-					res.status(500).send(responseJSON);
+					res.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -413,7 +413,7 @@ router.delete("/item/:id",function(req,res){
 	if(!username){
 		responseJSON.status = "error";
 		responseJSON.error = "You must be logged in to delete a post if you can even delete this post.";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		db.close(); 
 		return;
 	}
@@ -433,7 +433,7 @@ router.delete("/item/:id",function(req,res){
 				if(result.length == 0){
 					responseJSON.status = "error";
 					responseJSON.error = "No such item exists.";
-					res.status(500).send(responseJSON);
+					res.status(400).send(responseJSON);
 					db.close();
 					return;
 				}
@@ -487,7 +487,7 @@ router.get("/user/:username/posts",function(req,res){
 	if(!req.params.username){
 		responseJSON.error = "No username provided";
 		responseJSON.status = "error";
-		res.status(500).send(responseJSON);
+		res.status(400).send(responseJSON);
 		return;
 	}
 	MongoClient.connect(url, function(err, db) { 	
